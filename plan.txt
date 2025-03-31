@@ -1,0 +1,31 @@
+Python or Java?
+
+
+Supplier Management:
+-	Have contact details, order history and other basic supplier information
+-	Allow for add, update and deleting supplier records
+-	Create purchase orders, track order status and manage deliveries
+
+Inventory Management:
+-	Track and manage stock levels
+-	Receive new inventory and update stock quantities
+-	Monitor low stock alerts to prevent stockouts
+
+Order Processing:
+-	Process customer orders and update inventory levels accordingly
+
+Simple Financial Accounts:
+-	Track financial transactions related to inventory purchases and sales
+-	Generate basic financial reports such as sales summaries and expense reports
+
+
+Minimise runtime errors (assuming this will be scaled up) (python may be difficult to detect runtime errors) (type annotations?)
+
+Have a very basic text-based UI
+(USER INTERFACE MUST BE DECOUPLED FROM THE BUSINESS LOGIC)
+
+
+Must include (and be documented) illustrating inheritance, encapsulation and polymorphism
+
+
+Use CASE development tools (Whatever that means)
