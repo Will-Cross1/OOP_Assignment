@@ -29,3 +29,9 @@ Must include (and be documented) illustrating inheritance, encapsulation and pol
 
 
 Use CASE development tools (Whatever that means)
+
+
+
+
+
+List of object for each object to store supplier information
