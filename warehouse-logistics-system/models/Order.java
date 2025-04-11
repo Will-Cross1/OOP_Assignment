@@ -2,20 +2,20 @@ package models;
 
 
 /**
- * Write a description of class BaseOrder here.
+ * Write a description of class Order here.
  *
  * @author (your name)
  * @version (a version number or a date)
  */
-public class BaseOrder
+public class Order
 {
     // instance variables - replace the example below with your own
     private int x;
 
     /**
-     * Constructor for objects of class BaseOrder
+     * Constructor for objects of class Order
      */
-    public BaseOrder()
+    public Order()
     {
         // initialise instance variables
         x = 0;

@@ -1,6 +1,10 @@
 package ui;
 
 import java.util.Scanner;
+
+import models.Supplier;
+import services.SupplierService;
+import services.InventoryService;
 /**
  * Write a description of class VisualInterface here.
  *
@@ -10,13 +14,16 @@ import java.util.Scanner;
 public class VisualInterface
 {
     private Scanner scanner;
-
+    private SupplierService supplierService;
+    private InventoryService inventoryService;
     /**
      * Constructor for objects of class VisualInterface
      */
-    public VisualInterface()
+    public VisualInterface(SupplierService supplierService, InventoryService inventoryService)
     {
-        scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in);
+        this.supplierService = supplierService;
+        this.inventoryService = inventoryService;
     }
 
     /**
@@ -29,7 +36,14 @@ public class VisualInterface
         boolean running = true;
 
         while (running) {
-            printMainMenu();
+            System.out.println("\n=== BNU Warehouse Management System ===");
+            System.out.println("1. Supplier Management");
+            System.out.println("2. Inventory Management");
+            System.out.println("3. Make Order");
+            System.out.println("4. Financial Reports");
+            System.out.println("0. Exit");
+            System.out.print("Select an option: ");
+            
             int choice = getUserChoice();
 
             switch (choice) {
@@ -58,16 +72,6 @@ public class VisualInterface
         scanner.close();
     }
     
-    private void printMainMenu() {
-        System.out.println("\n=== BNU Warehouse Management System ===");
-        System.out.println("1. Supplier Management");
-        System.out.println("2. Inventory Management");
-        System.out.println("3. Make Order");
-        System.out.println("4. Financial Reports");
-        System.out.println("0. Exit");
-        System.out.print("Select an option: ");
-    }
-    
     private void supplierMenu() {
         boolean back = false;
     
@@ -87,16 +91,16 @@ public class VisualInterface
     
             switch (choice) {
                 case 1:
-                    System.out.println("View Suppliers - [Placeholder]");
+                    viewSuppliers();
                     break;
                 case 2:
-                    System.out.println("Add Supplier - [Placeholder]");
+                    addSupplier();
                     break;
                 case 3:
-                    System.out.println("Update Supplier - [Placeholder]");
+                    updateSupplier();
                     break;
                 case 4:
-                    System.out.println("Delete Supplier - [Placeholder]");
+                    deleteSupplier();
                     break;
                 case 5:
                     System.out.println("Create Purchase Order - [Placeholder]");
@@ -113,6 +117,117 @@ public class VisualInterface
                 default:
                     System.out.println("Invalid option. Try again.");
             }
+        }
+    }
+
+    private void viewSuppliers() {
+        System.out.println("\n-- Supplier List --");
+        for (Supplier s : supplierService.getAllSuppliers()) {
+            System.out.println(s);
+        }
+    }
+
+    private void addSupplier() {
+        System.out.println("=== Add Supplier ===");
+
+        System.out.print("Enter Supplier Name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter Email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Enter Phone: ");
+        String phone = scanner.nextLine();
+
+        System.out.print("Enter Location: ");
+        String location = scanner.nextLine();
+
+        Supplier newSupplier = supplierService.addSupplier(name, email, phone, location);
+        System.out.println("Supplier added successfully with ID: " + newSupplier.getId());
+    }
+
+    private void updateSupplier() {
+        System.out.println("=== Update Supplier ===");
+        System.out.print("Enter Supplier ID to update: ");
+        int id = getUserChoice();
+    
+        Supplier supplier = supplierService.findSupplierById(id);
+        if (supplier == null) {
+            System.out.println("Supplier not found.");
+            return;
+        }
+    
+        boolean back = false;
+        while (!back) {
+            System.out.println("\nSelect what to update:");
+            System.out.println("1. Name");
+            System.out.println("2. Contact (Email & Phone)");
+            System.out.println("3. Location");
+            System.out.println("4. All fields");
+            System.out.println("0. Cancel");
+            System.out.print("Choice: ");
+            int choice = getUserChoice();
+    
+            String name = supplier.getName();
+            String email = supplier.getEmail();
+            String phone = supplier.getPhone();
+            String location = supplier.getLocation();
+    
+            switch (choice) {
+                case 1 -> {
+                    System.out.print("Enter new Name: ");
+                    name = scanner.nextLine();
+                }
+                case 2 -> {
+                    System.out.print("Enter new Email: ");
+                    email = scanner.nextLine();
+                    System.out.print("Enter new Phone: ");
+                    phone = scanner.nextLine();
+                }
+                case 3 -> {
+                    System.out.print("Enter new Location: ");
+                    location = scanner.nextLine();
+                }
+                case 4 -> {
+                    System.out.print("Enter new Name: ");
+                    name = scanner.nextLine();
+                    System.out.print("Enter new Email: ");
+                    email = scanner.nextLine();
+                    System.out.print("Enter new Phone: ");
+                    phone = scanner.nextLine();
+                    System.out.print("Enter new Location: ");
+                    location = scanner.nextLine();
+                }
+                case 0 -> {
+                    System.out.println("Update cancelled.");
+                    return;
+                }
+                default -> {
+                    System.out.println("Invalid option.");
+                    continue;
+                }
+            }
+    
+            boolean updated = supplierService.updateSupplier(id, name, email, phone, location);
+            if (updated) {
+                System.out.println("Supplier updated successfully.");
+            } else {
+                System.out.println("Failed to update supplier.");
+            }
+    
+            back = true;
+        }
+    }
+
+    private void deleteSupplier() {
+        System.out.print("Enter Supplier ID to delete: ");
+        int id = getUserChoice();
+
+        boolean removed = supplierService.deleteSupplier(id);
+        if (removed) {
+            System.out.println("Supplier deleted successfully.");
+        } else {
+            System.out.println("Supplier not found.");
         }
     }
     

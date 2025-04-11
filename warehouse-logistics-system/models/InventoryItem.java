@@ -1,35 +1,50 @@
 package models;
 
-
 /**
- * Write a description of class InventoryItem here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * Represents an item in the warehouse inventory
  */
-public class InventoryItem
-{
-    // instance variables - replace the example below with your own
-    private int x;
+public class InventoryItem extends Item {
+    private double unitPrice;
+    private int quantity;
 
-    /**
-     * Constructor for objects of class InventoryItem
-     */
-    public InventoryItem()
-    {
-        // initialise instance variables
-        x = 0;
+    // Constructor where ID is passed from outside
+    public InventoryItem(int id, String name, String description, double unitPrice, int quantity) {
+        super(id, name, description);
+        this.unitPrice = unitPrice;
+        this.quantity = quantity;
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    // Getters and setters for price and quantity
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void increaseStock(int amount) {
+        this.quantity += amount;
+    }
+
+    public void decreaseStock(int amount) {
+        if (amount <= quantity) {
+            this.quantity -= amount;
+        } else {
+            System.out.println("Not enough stock to remove " + amount + " items.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Price: £" + unitPrice + " | Stock: " + quantity;
     }
 }

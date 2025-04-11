@@ -1,35 +1,76 @@
 package services;
 
+import models.Supplier;
+import models.InventoryItem;
+import models.SupplierItem;
 
-/**
- * Write a description of class SupplierService here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
-public class SupplierService
-{
-    // instance variables - replace the example below with your own
-    private int x;
+import java.util.ArrayList;
+import java.util.List;
 
-    /**
-     * Constructor for objects of class SupplierService
-     */
-    public SupplierService()
-    {
-        // initialise instance variables
-        x = 0;
+public class SupplierService {
+    private List<Supplier> suppliers;
+    private int nextId;
+
+    public SupplierService() {
+        this.suppliers = new ArrayList<>();
+        this.nextId = 1; // Start IDs from 1
     }
 
+    public Supplier addSupplier(String name, String email, String phone, String location) {
+        Supplier newSupplier = new Supplier(nextId++, name, email, phone, location);
+        suppliers.add(newSupplier);
+        return newSupplier;
+    }
+
+    public List<Supplier> getAllSuppliers() {
+        return new ArrayList<>(suppliers); // Return a copy for safety
+    }
+
+    public Supplier findSupplierById(int id) {
+        for (Supplier supplier : suppliers) {
+            if (supplier.getId() == id) {
+                return supplier;
+            }
+        }
+        return null;
+    }
+
+    public boolean updateSupplier(int id, String newName, String newEmail, String newPhone, String newLocation) {
+        Supplier supplier = findSupplierById(id);
+        if (supplier != null) {
+            supplier.updateName(newName);
+            supplier.updateContact(newEmail, newPhone);
+            supplier.updateLocation(newLocation);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteSupplier(int id) {
+        Supplier supplier = findSupplierById(id);
+        if (supplier != null) {
+            suppliers.remove(supplier);
+            return true;
+        }
+        return false;
+    }
     /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
+     * Create a SupplierItem from an existing InventoryItem and attach it to the supplier
      */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    public SupplierItem createSupplierItem(int supplierId, InventoryItem inventoryItem, double supplierPrice) {
+        Supplier supplier = findSupplierById(supplierId);
+        if (supplier == null) {
+            throw new IllegalArgumentException("Supplier with ID " + supplierId + " not found.");
+        }
+    
+        SupplierItem supplierItem = new SupplierItem(
+            inventoryItem.getId(),
+            inventoryItem.getName(),
+            inventoryItem.getDescription(),
+            supplierPrice
+        );
+    
+        supplier.addItem(supplierItem);
+        return supplierItem;
     }
 }

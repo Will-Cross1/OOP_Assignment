@@ -1,35 +1,40 @@
 package services;
 
+import java.util.ArrayList;
+import java.util.List;
+import models.InventoryItem;
 
-/**
- * Write a description of class InventoryService here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
-public class InventoryService
-{
-    // instance variables - replace the example below with your own
-    private int x;
+public class InventoryService {
+    private List<InventoryItem> inventory;
 
-    /**
-     * Constructor for objects of class InventoryService
-     */
-    public InventoryService()
-    {
-        // initialise instance variables
-        x = 0;
+    public InventoryService() {
+        inventory = new ArrayList<>();
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    public void addInventoryItem(InventoryItem item) {
+        inventory.add(item);
+    }
+
+    public List<InventoryItem> getAllInventoryItems() {
+        return inventory;
+    }
+
+    public InventoryItem findById(int id) {
+        for (InventoryItem item : inventory) {
+            if (item.getId() == id) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void removeItemById(int id) {
+        inventory.removeIf(item -> item.getId() == id);
+    }
+
+    public void printInventory() {
+        for (InventoryItem item : inventory) {
+            System.out.println(item);
+        }
     }
 }
