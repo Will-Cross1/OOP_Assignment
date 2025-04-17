@@ -9,8 +9,8 @@ public class Supplier {
     private String email;
     private String phone;
     private String location;
-    private List<SupplierItem> items;  // Renamed from 'products' to better reflect usage
-    // private List<Order> orderHistory; // You can uncomment this when needed
+    private List<SupplierItem> items;
+    private List<SupplierOrderRecord> orderHistory;
 
     public Supplier(int id, String name, String email, String phone, String location) {
         this.id = id;
@@ -19,7 +19,7 @@ public class Supplier {
         this.phone = phone;
         this.location = location;
         this.items = new ArrayList<>();
-        // this.orderHistory = new ArrayList<>();
+        this.orderHistory = new ArrayList<>();
     }
 
     // --- Update Methods ---
@@ -57,6 +57,15 @@ public class Supplier {
         return new ArrayList<>(items); // Return copy to avoid external mutation
     }
 
+    public SupplierItem getItemById(int itemId) {
+        for (SupplierItem item : items) {
+            if (item.getId() == itemId) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     // --- Getters ---
     public int getId() {
         return id;
@@ -78,13 +87,13 @@ public class Supplier {
         return location;
     }
 
-    //public void addOrder(Order order) {
-    //    orderHistory.add(order);
-    //}
-
-    //public List<Order> getOrderHistory() {
-    //    return orderHistory;
-    //}
+    public void addOrderRecord(SupplierOrderRecord record) {
+        orderHistory.add(record);
+    }
+    
+    public List<SupplierOrderRecord> getOrderHistory() {
+        return new ArrayList<>(orderHistory);
+    }
 
     // --- Output ---
     @Override

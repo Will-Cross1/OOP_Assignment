@@ -1,35 +1,52 @@
 package models;
 
+import java.time.LocalDate;
+import java.util.Map;
 
-/**
- * Write a description of class Order here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
-public class Order
-{
-    // instance variables - replace the example below with your own
-    private int x;
-
-    /**
-     * Constructor for objects of class Order
-     */
-    public Order()
-    {
-        // initialise instance variables
-        x = 0;
+public class Order {
+    public enum Status {
+        PROCESSED, IN_TRANSIT, DELIVERED
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    private int id;
+    private Map<String, Integer> products; // key = item id or supplier:supplierItem
+    private LocalDate estimatedArrival;
+    private Status status;
+    private FinancialTransaction transaction;
+
+    public Order(int id, Map<String, Integer> products, LocalDate estimatedArrival,
+                 Status status, FinancialTransaction transaction) {
+        this.id = id;
+        this.products = products;
+        this.estimatedArrival = estimatedArrival;
+        this.status = status;
+        this.transaction = transaction;
+    }
+
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public Map<String, Integer> getProducts() {
+        return products;
+    }
+
+    public LocalDate getEstimatedArrival() {
+        return estimatedArrival;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public FinancialTransaction getTransaction() {
+        return transaction;
+    }
+
+    @Override
+    public String toString() {
+        return "Order #" + id + " | Type: " + transaction.getType() +
+               " | Status: " + status + " | ETA: " + estimatedArrival + "\n" + transaction;
     }
 }

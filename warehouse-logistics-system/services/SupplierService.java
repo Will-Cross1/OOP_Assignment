@@ -3,6 +3,7 @@ package services;
 import models.Supplier;
 import models.InventoryItem;
 import models.SupplierItem;
+import models.SupplierOrderRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,5 +73,33 @@ public class SupplierService {
     
         supplier.addItem(supplierItem);
         return supplierItem;
+    }
+
+    public boolean updateSupplierPrice(int supplierId, int itemId, double newPrice) {
+        Supplier supplier = findSupplierById(supplierId);
+        if (supplier != null) {
+            SupplierItem item = supplier.getItemById(itemId);
+            if (item != null) {
+                item.setSupplierPrice(newPrice);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean removeSupplierItem(int supplierId, int itemId) {
+        Supplier supplier = findSupplierById(supplierId);
+        if (supplier != null) {
+            supplier.removeItemById(itemId);
+        }
+        return false;
+    }
+
+    public List<SupplierOrderRecord> getOrderHistoryForSupplier(int supplierId) {
+        Supplier supplier = findSupplierById(supplierId);
+        if (supplier != null) {
+            return supplier.getOrderHistory();
+        }
+        return new ArrayList<>();
     }
 }

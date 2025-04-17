@@ -1,35 +1,35 @@
 package services;
 
+import models.*;
 
-/**
- * Write a description of class OrderService here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
-public class OrderService
-{
-    // instance variables - replace the example below with your own
-    private int x;
+import java.time.LocalDate;
+import java.util.*;
 
-    /**
-     * Constructor for objects of class OrderService
-     */
-    public OrderService()
-    {
-        // initialise instance variables
-        x = 0;
+public class OrderService {
+
+    private final List<Order> orders;
+    private final OrderCreationService orderCreationService;
+
+    public OrderService(OrderCreationService orderCreationService) {
+        this.orders = new ArrayList<>();
+        this.orderCreationService = orderCreationService;
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    public void createOrder(Map<String, Integer> products, LocalDate arrival, Order.Status status, FinancialTransaction.Type type) {
+        Order order = orderCreationService.createOrder(products, arrival, status, type);
+        orders.add(order);
+    }
+
+    public List<Order> getAllOrders() {
+        return new ArrayList<>(orders); // defensive copy
+    }
+
+    public Order getOrderById(int id) {
+        for (Order order : orders) {
+            if (order.getId() == id) {
+                return order;
+            }
+        }
+        return null;
     }
 }
