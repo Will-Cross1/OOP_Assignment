@@ -23,7 +23,7 @@ public class Main
      */
     public static void main(String[] args) {
         InventoryService inventoryService = new InventoryService();
-        SupplierService supplierService = new SupplierService();
+        SupplierService supplierService = new SupplierService(inventoryService);
         OrderCreationService orderCreationService = new OrderCreationService(inventoryService, supplierService);
         OrderService orderService = new OrderService(orderCreationService);
         FinancialService financialService = new FinancialService(inventoryService, supplierService, orderService);
@@ -41,16 +41,12 @@ public class Main
         supplierService.addSupplier("Global Distributors", "contact@global.com", "01709876543", "Birmingham");
         supplierService.addSupplier("Shell Company", "we_commit@tax_evasion.co.uk", "01234567890", "Gurnsey");
 
-        InventoryItem invItem1 = inventoryService.findById(1);
-        InventoryItem invItem2 = inventoryService.findById(2);
-        InventoryItem invItem3 = inventoryService.findById(3);
-
-        supplierService.createSupplierItem(1, invItem1, 1423);
-        supplierService.createSupplierItem(1, invItem1, 1400);
-        supplierService.createSupplierItem(2, invItem2, 20);
-        supplierService.createSupplierItem(3, invItem1, 1423);
-        supplierService.createSupplierItem(3, invItem2, 23);
-        supplierService.createSupplierItem(3, invItem3, 64);
+        supplierService.createSupplierItem(1, 1, 1423);
+        supplierService.createSupplierItem(1, 1, 1400);
+        supplierService.createSupplierItem(2, 2, 20);
+        supplierService.createSupplierItem(3, 1, 1423);
+        supplierService.createSupplierItem(3, 2, 23);
+        supplierService.createSupplierItem(3, 3, 64);
 
         System.out.println("\n=== ALL SUPPLIERS AND THEIR ITEMS ===");
         for (Supplier s : supplierService.getAllSuppliers()) {

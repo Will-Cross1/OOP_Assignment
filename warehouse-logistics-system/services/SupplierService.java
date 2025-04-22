@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SupplierService {
+    private final InventoryService inventoryService;
     private List<Supplier> suppliers;
     private int nextId;
 
-    public SupplierService() {
+    public SupplierService(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
         this.suppliers = new ArrayList<>();
         this.nextId = 1; // Start IDs from 1
     }
@@ -58,14 +60,15 @@ public class SupplierService {
     /**
      * Create a SupplierItem from an existing InventoryItem and attach it to the supplier
      */
-    public SupplierItem createSupplierItem(int supplierId, InventoryItem inventoryItem, double supplierPrice) {
+    public SupplierItem createSupplierItem(int supplierId, int inventoryItemId, double supplierPrice) {
         Supplier supplier = findSupplierById(supplierId);
+        InventoryItem inventoryItem = inventoryService.findById(inventoryItemId);
         if (supplier == null) {
             throw new IllegalArgumentException("Supplier with ID " + supplierId + " not found.");
         }
     
         SupplierItem supplierItem = new SupplierItem(
-            inventoryItem.getId(),
+            inventoryItemId,
             inventoryItem.getName(),
             inventoryItem.getDescription(),
             supplierPrice
