@@ -44,6 +44,11 @@ public class Order {
         return transaction;
     }
 
+    // Setters
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Order #" + id + " | Type: " + transaction.getType() +

@@ -67,7 +67,6 @@ public class Main
         orderService.createOrder(
             saleProducts,
             LocalDate.of(2025, 5, 1),
-            Order.Status.PROCESSED,
             FinancialTransaction.Type.SALE
         );
 
@@ -78,14 +77,30 @@ public class Main
         orderService.createOrder(
             purchaseProducts,
             LocalDate.of(2025, 6, 1),
-            Order.Status.PROCESSED,
             FinancialTransaction.Type.PURCHASE
         );
 
+        inventoryService.printInventory();
+
         // --- PRINT ORDERS ---
         System.out.println("\n=== ALL ORDERS ===");
-        for (Order order : orderService.getAllOrders()) {
-            System.out.println(order);
+        try {
+            Thread.sleep(5000);
+            for (Order order : orderService.getAllOrders()) {
+                System.out.println(order);
+            }
+
+            Thread.sleep(10000);
+            for (Order order : orderService.getAllOrders()) {
+                System.out.println(order);
+            }
+
+            Thread.sleep(5000);
+            for (Order order : orderService.getAllOrders()) {
+                System.out.println(order);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         // --- INVENTORY SERVICE NEW METHODS ---

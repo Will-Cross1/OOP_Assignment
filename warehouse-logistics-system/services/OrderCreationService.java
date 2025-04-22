@@ -81,11 +81,11 @@ public class OrderCreationService {
 
     private double processTransaction(Order order) {
         double total = 0.0;
-
+    
         for (Map.Entry<String, Integer> entry : order.getProducts().entrySet()) {
             String key = entry.getKey();
             int quantity = entry.getValue();
-
+    
             if (order.getTransaction().getType() == FinancialTransaction.Type.SALE) {
                 int itemId = Integer.parseInt(key);
                 InventoryItem item = inventoryService.findById(itemId);
@@ -93,27 +93,51 @@ public class OrderCreationService {
                     total += item.getUnitPrice() * quantity;
                     item.setQuantity(item.getQuantity() - quantity);
                 }
-
             } else if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE) {
-                String[] parts = key.split(":");
-                int supplierId = Integer.parseInt(parts[0]);
-                int supplierItemId = Integer.parseInt(parts[1]);
-
-                Supplier supplier = supplierService.findSupplierById(supplierId);
-                if (supplier != null) {
-                    SupplierItem item = supplier.getItemById(supplierItemId);
-                    if (item != null) {
-                        total += item.getSupplierPrice() * quantity;
-                        InventoryItem stockItem = inventoryService.findById(item.getId());
-                        if (stockItem != null) {
-                            stockItem.setQuantity(stockItem.getQuantity() + quantity);
-                        }
-                    }
-                }
+                total += processPurchaseEntry(order, key, quantity, false);
             }
         }
-
+    
         return total;
+    }
+    
+    public Runnable getStockUpdateTask(Order order) {
+        return () -> {
+            if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE &&
+                order.getStatus() == Order.Status.DELIVERED) {
+                for (Map.Entry<String, Integer> entry : order.getProducts().entrySet()) {
+                    processPurchaseEntry(order, entry.getKey(), entry.getValue(), true);
+                }
+            }
+        };
+    }
+    
+    private double processPurchaseEntry(Order order, String key, int quantity, boolean updateStock) {
+        String[] parts = key.split(":");
+        if (parts.length != 2) return 0.0;
+    
+        try {
+            int supplierId = Integer.parseInt(parts[0]);
+            int supplierItemId = Integer.parseInt(parts[1]);
+    
+            Supplier supplier = supplierService.findSupplierById(supplierId);
+            if (supplier == null) return 0.0;
+    
+            SupplierItem supplierItem = supplier.getItemById(supplierItemId);
+            if (supplierItem == null) return 0.0;
+    
+            InventoryItem stockItem = inventoryService.findById(supplierItem.getId());
+            if (stockItem == null) return 0.0;
+    
+            if (updateStock) {
+                stockItem.setQuantity(stockItem.getQuantity() + quantity);
+            }
+    
+            return supplierItem.getSupplierPrice() * quantity;
+    
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
 
     private void updateSupplierOrderHistories(Order order) {
