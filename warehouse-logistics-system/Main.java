@@ -25,7 +25,7 @@ public class Main
         SupplierService supplierService = new SupplierService(inventoryService);
         OrderCreationService orderCreationService = new OrderCreationService(inventoryService, supplierService);
         OrderService orderService = new OrderService(orderCreationService);
-        FinancialService financialService = new FinancialService(inventoryService, supplierService, orderService);
+        FinancialService financialService = new FinancialService(orderService);
 
         // --- INVENTORY SETUP ---
         inventoryService.addInventoryItem(1, "Laptop", "15-inch portable computer", 1000.0, 10);
@@ -149,15 +149,6 @@ public class Main
         // Step 3: Print all-time financial report
         System.out.println("All-Time Financial Report:");
         financialService.printAllTimeFinancialReport();
-
-        // Step 4: Print financial report for a specific item
-        int itemId = 2;
-        System.out.println("Financial Report for Item ID " + itemId + ":");
-        financialService.printFinancialReportByItem(itemId);
-
-        itemId = 3;
-        System.out.println("Financial Report for Item ID " + itemId + ":");
-        financialService.printFinancialReportByItem(itemId);
 
         // Launch UI with services injected
         VisualInterface ui = new VisualInterface(supplierService, inventoryService);

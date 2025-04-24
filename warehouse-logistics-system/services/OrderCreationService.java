@@ -20,6 +20,16 @@ public class OrderCreationService {
         this.supplierService = supplierService;
     }
 
+    /**
+     * Creates a new order based on the provided products, status, and transaction type.
+     * Validates the order, calculates the total, applies stock changes, and updates the supplier order histories for purchase transactions in different methods.
+     *
+     * @param products a map of product identifiers and their respective quantities in the order
+     * @param status the status of the order (e.g., IN_TRANSIT, DELIVERED)
+     * @param type the type of the financial transaction (e.g., SALE or PURCHASE)
+     * @return the newly created Order object
+     * @throws IllegalArgumentException if the order is invalid due to insufficient stock or invalid items
+     */
     public Order createOrder(
         Map<String, Integer> products,
         Order.Status status,
@@ -160,13 +170,19 @@ public class OrderCreationService {
         }
     }
 
+    /**
+     * Returns a runnable task that updates the stock for a given order once it is delivered and is of type PURCHASE.
+     * The task will iterate through each product in the order and update the stock for each item.
+     *
+     * @param order the order for which the stock update task will be created
+     * @return a Runnable task that performs the stock update for the given order ran in OrderService.java
+     */
     public Runnable getStockUpdateTask(Order order) {
         return () -> {
             if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE &&
                 order.getStatus() == Order.Status.DELIVERED) {
                 Map<String, Integer> entrys = order.getProducts();
                 for (Map.Entry<String, Integer> entry : entrys.entrySet()) {
-                    //System.out.println(entry);
                     updatePurchaseStock(entry.getKey(), entry.getValue());
                 }
             }
