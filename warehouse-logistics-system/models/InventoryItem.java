@@ -14,7 +14,7 @@ public class InventoryItem extends Item {
         this.quantity = quantity;
     }
 
-    // Getters and setters for price and quantity
+    // Getters
     public double getUnitPrice() {
         return unitPrice;
     }
@@ -23,6 +23,7 @@ public class InventoryItem extends Item {
         return quantity;
     }
 
+    // Setters
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
@@ -31,18 +32,7 @@ public class InventoryItem extends Item {
         this.quantity = quantity;
     }
 
-    public void increaseStock(int amount) {
-        this.quantity += amount;
-    }
-
-    public void decreaseStock(int amount) {
-        if (amount <= quantity) {
-            this.quantity -= amount;
-        } else {
-            System.out.println("Not enough stock to remove " + amount + " items.");
-        }
-    }
-
+    // ToString method to display item details
     @Override
     public String toString() {
         return super.toString() + " | Price: £" + unitPrice + " | Stock: " + quantity;

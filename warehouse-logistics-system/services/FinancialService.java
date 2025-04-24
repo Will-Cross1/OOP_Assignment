@@ -9,12 +9,14 @@ public class FinancialService {
     private SupplierService supplierService;
     private OrderService orderService;
 
+    // Constructor
     public FinancialService(InventoryService inventoryService, SupplierService supplierService, OrderService orderService) {
         this.inventoryService = inventoryService;
         this.supplierService = supplierService;
         this.orderService = orderService;
     }
 
+    // All-Time Financial Reporting
     public void printAllTimeFinancialReport() {
         double totalRevenue = 0;
         double totalPurchases = 0;
@@ -39,6 +41,7 @@ public class FinancialService {
         System.out.println("=================================");
     }
 
+    // Item-Specific Financial Reporting
     public void printFinancialReportByItem(int itemId) {
         double revenue = 0;
         double cost = 0;

@@ -3,13 +3,15 @@ package services;
 import models.*;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OrderCreationService {
     private final InventoryService inventoryService;
     private final SupplierService supplierService;
     private int nextOrderId = 1;
 
+    // Constructor
     public OrderCreationService(
         InventoryService inventoryService,
         SupplierService supplierService
@@ -41,6 +43,7 @@ public class OrderCreationService {
         return order;
     }
 
+    // Order Validation
     private boolean isOrderValid(Map<String, Integer> products, FinancialTransaction.Type type) {
         for (Map.Entry<String, Integer> entry : products.entrySet()) {
             String key = entry.getKey();
@@ -79,6 +82,7 @@ public class OrderCreationService {
         return true;
     }
 
+    // Transaction Processing
     private double processTransaction(Order order) {
         double total = 0.0;
     
@@ -100,18 +104,7 @@ public class OrderCreationService {
     
         return total;
     }
-    
-    public Runnable getStockUpdateTask(Order order) {
-        return () -> {
-            if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE &&
-                order.getStatus() == Order.Status.DELIVERED) {
-                for (Map.Entry<String, Integer> entry : order.getProducts().entrySet()) {
-                    processPurchaseEntry(order, entry.getKey(), entry.getValue(), true);
-                }
-            }
-        };
-    }
-    
+
     private double processPurchaseEntry(Order order, String key, int quantity, boolean updateStock) {
         String[] parts = key.split(":");
         if (parts.length != 2) return 0.0;
@@ -140,6 +133,18 @@ public class OrderCreationService {
         }
     }
 
+    public Runnable getStockUpdateTask(Order order) {
+        return () -> {
+            if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE &&
+                order.getStatus() == Order.Status.DELIVERED) {
+                for (Map.Entry<String, Integer> entry : order.getProducts().entrySet()) {
+                    processPurchaseEntry(order, entry.getKey(), entry.getValue(), true);
+                }
+            }
+        };
+    }
+
+    // Order History Update
     private void updateSupplierOrderHistories(Order order) {
         Map<Integer, Map<Integer, Integer>> supplierItemGroups = new HashMap<>();
 

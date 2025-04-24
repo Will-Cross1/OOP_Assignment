@@ -13,37 +13,26 @@ public class SupplierService {
     private List<Supplier> suppliers;
     private int nextId;
 
+    // Constructor
     public SupplierService(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
         this.suppliers = new ArrayList<>();
         this.nextId = 1; // Start IDs from 1
     }
 
+    // Supplier Management Operations
     public Supplier addSupplier(String name, String email, String phone, String location) {
         Supplier newSupplier = new Supplier(nextId++, name, email, phone, location);
         suppliers.add(newSupplier);
         return newSupplier;
     }
 
-    public List<Supplier> getAllSuppliers() {
-        return new ArrayList<>(suppliers); // Return a copy for safety
-    }
-
-    public Supplier findSupplierById(int id) {
-        for (Supplier supplier : suppliers) {
-            if (supplier.getId() == id) {
-                return supplier;
-            }
-        }
-        return null;
-    }
-
     public boolean updateSupplier(int id, String newName, String newEmail, String newPhone, String newLocation) {
         Supplier supplier = findSupplierById(id);
         if (supplier != null) {
-            supplier.updateName(newName);
-            supplier.updateContact(newEmail, newPhone);
-            supplier.updateLocation(newLocation);
+            supplier.setName(newName);
+            supplier.setContact(newEmail, newPhone);
+            supplier.setLocation(newLocation);
             return true;
         }
         return false;
@@ -57,6 +46,30 @@ public class SupplierService {
         }
         return false;
     }
+
+    // Supplier Retrieval Operations
+    public List<Supplier> getAllSuppliers() {
+        return new ArrayList<>(suppliers); // Return a copy for safety
+    }
+
+    public Supplier findSupplierById(int id) {
+        for (Supplier supplier : suppliers) {
+            if (supplier.getId() == id) {
+                return supplier;
+            }
+        }
+        return null;
+    }
+
+    public List<SupplierOrderRecord> getOrderHistoryForSupplier(int supplierId) {
+        Supplier supplier = findSupplierById(supplierId);
+        if (supplier != null) {
+            return supplier.getOrderHistory();
+        }
+        return new ArrayList<>();
+    }
+
+    // Supplier Item Management Operations
     /**
      * Create a SupplierItem from an existing InventoryItem and attach it to the supplier
      */
@@ -96,13 +109,5 @@ public class SupplierService {
             supplier.removeItemById(itemId);
         }
         return false;
-    }
-
-    public List<SupplierOrderRecord> getOrderHistoryForSupplier(int supplierId) {
-        Supplier supplier = findSupplierById(supplierId);
-        if (supplier != null) {
-            return supplier.getOrderHistory();
-        }
-        return new ArrayList<>();
     }
 }

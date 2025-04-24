@@ -11,6 +11,7 @@ public class FinancialTransaction {
     private LocalDate transactionDate;
     private double total;
 
+    // Constructor
     public FinancialTransaction(Type type, LocalDate transactionDate) {
         this.type = type;
         this.transactionDate = transactionDate;
@@ -29,10 +30,12 @@ public class FinancialTransaction {
         return total;
     }
 
+    // Setter
     public void setTotal(double total) {
         this.total = total;
     }
 
+    // ToString method to display item details
     @Override
     public String toString() {
         return "Transaction: " + type + " | Date: " + transactionDate + " | Total: £" + total;

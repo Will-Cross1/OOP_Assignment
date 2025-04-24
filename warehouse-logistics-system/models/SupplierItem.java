@@ -12,15 +12,17 @@ public class SupplierItem extends Item {
         this.supplierPrice = supplierPrice;
     }
 
-    // Getter and setter for supplier price
+    // Getter
     public double getSupplierPrice() {
         return supplierPrice;
     }
 
+    // Setter
     public void setSupplierPrice(double supplierPrice) {
         this.supplierPrice = supplierPrice;
     }
 
+    // ToString method to display item details
     @Override
     public String toString() {
         return super.toString() + " | Supplier Price: £" + supplierPrice;

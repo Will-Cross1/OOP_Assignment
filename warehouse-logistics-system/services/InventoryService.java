@@ -10,26 +10,15 @@ import models.InventoryItem;
 public class InventoryService {
     private List<InventoryItem> inventory;
 
+    // Constructor
     public InventoryService() {
         inventory = new ArrayList<>();
     }
 
+    // Inventory Management Operations
     public void addInventoryItem(int id, String name, String description, double unitPrice, int quantity) {
         InventoryItem item = new InventoryItem(id, name, description, unitPrice, quantity);
         inventory.add(item);
-    }
-
-    public List<InventoryItem> getAllInventoryItems() {
-        return inventory;
-    }
-
-    public InventoryItem findById(int id) {
-        for (InventoryItem item : inventory) {
-            if (item.getId() == id) {
-                return item;
-            }
-        }
-        return null;
     }
 
     public void removeItemById(int id) {
@@ -60,6 +49,20 @@ public class InventoryService {
         return false;
     }
 
+    // Inventory Retrieval Operations
+    public List<InventoryItem> getAllInventoryItems() {
+        return inventory;
+    }
+
+    public InventoryItem findById(int id) {
+        for (InventoryItem item : inventory) {
+            if (item.getId() == id) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     /**
      * Get the stock level for a specific item by ID.
      */
@@ -79,6 +82,7 @@ public class InventoryService {
         return stockLevels;
     }
 
+    // Display Operations
     public void printInventory() {
         for (InventoryItem item : inventory) {
             System.out.println(item);

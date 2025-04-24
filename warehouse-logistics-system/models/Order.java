@@ -14,6 +14,7 @@ public class Order {
     private Status status;
     private FinancialTransaction transaction;
 
+    // Constructor
     public Order(int id, Map<String, Integer> products, LocalDate estimatedArrival,
                  Status status, FinancialTransaction transaction) {
         this.id = id;
@@ -49,6 +50,7 @@ public class Order {
         this.status = status;
     }
 
+    // ToString method to display item details
     @Override
     public String toString() {
         return "Order #" + id + " | Type: " + transaction.getType() +

@@ -28,15 +28,6 @@ public abstract class Item {
         return description;
     }
 
-    // Setters
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     // ToString method to display item details
     @Override
     public String toString() {

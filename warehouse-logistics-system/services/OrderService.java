@@ -3,7 +3,9 @@ package services;
 import models.*;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -14,11 +16,13 @@ public class OrderService {
     private final OrderCreationService orderCreationService;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
 
+    // Constructor
     public OrderService(OrderCreationService orderCreationService) {
         this.orders = new ArrayList<>();
         this.orderCreationService = orderCreationService;
     }
 
+    // Order Creation
     public void createOrder(Map<String, Integer> products, LocalDate arrival, FinancialTransaction.Type type) {
         Order.Status status = Order.Status.PROCESSED;
         if (type == FinancialTransaction.Type.SALE) {
@@ -31,6 +35,7 @@ public class OrderService {
         };
     }
 
+    // Order Retrieval
     public List<Order> getAllOrders() {
         return new ArrayList<>(orders); // defensive copy
     }
@@ -44,7 +49,7 @@ public class OrderService {
         return null;
     }
 
-    // Schedule and change the status of the order
+    // Schedule and change the status of the purchase order
     private void deliveryStatusManager(Order order, Runnable onDelivered) {
         // Initial state transition after 10 seconds (from PROCESSED to IN_TRANSIT)
         scheduler.schedule(() -> order.setStatus(Order.Status.IN_TRANSIT),
