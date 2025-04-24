@@ -22,18 +22,18 @@ public class OrderCreationService {
 
     public Order createOrder(
         Map<String, Integer> products,
-        LocalDate estimatedArrival,
         Order.Status status,
         FinancialTransaction.Type type
     ) {
         if (!isOrderValid(products, type)) {
             throw new IllegalArgumentException("Order validation failed: invalid items or insufficient stock.");
         }
-
         FinancialTransaction transaction = new FinancialTransaction(type, LocalDate.now());
-        Order order = new Order(nextOrderId++, products, estimatedArrival, status, transaction);
+        Order order = new Order(nextOrderId++, products, status, transaction);
 
-        double total = processTransaction(order); // apply stock changes + calculate total
+        double total = calculateTransactionTotal(order);
+        applyStockChanges(order);
+
         transaction.setTotal(total);
 
         if (type == FinancialTransaction.Type.PURCHASE) {
@@ -82,54 +82,81 @@ public class OrderCreationService {
         return true;
     }
 
-    // Transaction Processing
-    private double processTransaction(Order order) {
+    // Calculate transaction total
+    private double calculateTransactionTotal(Order order) {
         double total = 0.0;
-    
+
         for (Map.Entry<String, Integer> entry : order.getProducts().entrySet()) {
             String key = entry.getKey();
             int quantity = entry.getValue();
-    
+
             if (order.getTransaction().getType() == FinancialTransaction.Type.SALE) {
                 int itemId = Integer.parseInt(key);
                 InventoryItem item = inventoryService.findById(itemId);
                 if (item != null) {
                     total += item.getUnitPrice() * quantity;
-                    item.setQuantity(item.getQuantity() - quantity);
                 }
             } else if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE) {
-                total += processPurchaseEntry(order, key, quantity, false);
+                total += getPurchaseEntryTotal(key, quantity);
             }
         }
-    
+
         return total;
     }
 
-    private double processPurchaseEntry(Order order, String key, int quantity, boolean updateStock) {
+    // Apply stock changes after order creation
+    private void applyStockChanges(Order order) {
+        for (Map.Entry<String, Integer> entry : order.getProducts().entrySet()) {
+            String key = entry.getKey();
+            int quantity = entry.getValue();
+
+            if (order.getTransaction().getType() == FinancialTransaction.Type.SALE) {
+                int itemId = Integer.parseInt(key);
+                InventoryItem item = inventoryService.findById(itemId);
+                if (item != null) {
+                    item.setQuantity(item.getQuantity() - quantity);
+                }
+            }
+        }
+    }
+
+    // Used to calculate total
+    private double getPurchaseEntryTotal(String key, int quantity) {
+        SupplierItem supplierItem = getSupplierItemFromKey(key);
+        if (supplierItem == null) return 0.0;
+
+        return supplierItem.getSupplierPrice() * quantity;
+    }
+
+    // Used when updating inventory on purchase
+    private void updatePurchaseStock(String key, int quantity) {
+        SupplierItem supplierItem = getSupplierItemFromKey(key);
+        if (supplierItem == null) return;
+
+        InventoryItem stockItem = inventoryService.findById(supplierItem.getId());
+        if (stockItem != null) {
+            stockItem.setQuantity(stockItem.getQuantity() + quantity);
+        }
+    }
+
+    // Common method for getting the supplier item from key while checking the key
+    private SupplierItem getSupplierItemFromKey(String key) {
         String[] parts = key.split(":");
-        if (parts.length != 2) return 0.0;
-    
+        if (parts.length != 2) return null;
+
         try {
             int supplierId = Integer.parseInt(parts[0]);
             int supplierItemId = Integer.parseInt(parts[1]);
-    
+
             Supplier supplier = supplierService.findSupplierById(supplierId);
-            if (supplier == null) return 0.0;
-    
+            if (supplier == null) return null;
+
             SupplierItem supplierItem = supplier.getItemById(supplierItemId);
-            if (supplierItem == null) return 0.0;
-    
-            InventoryItem stockItem = inventoryService.findById(supplierItem.getId());
-            if (stockItem == null) return 0.0;
-    
-            if (updateStock) {
-                stockItem.setQuantity(stockItem.getQuantity() + quantity);
-            }
-    
-            return supplierItem.getSupplierPrice() * quantity;
-    
+            if (supplierItem == null) return null;
+
+            return supplierItem;
         } catch (NumberFormatException e) {
-            return 0.0;
+            return null; // If the key is not valid, return null
         }
     }
 
@@ -137,8 +164,10 @@ public class OrderCreationService {
         return () -> {
             if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE &&
                 order.getStatus() == Order.Status.DELIVERED) {
-                for (Map.Entry<String, Integer> entry : order.getProducts().entrySet()) {
-                    processPurchaseEntry(order, entry.getKey(), entry.getValue(), true);
+                Map<String, Integer> entrys = order.getProducts();
+                for (Map.Entry<String, Integer> entry : entrys.entrySet()) {
+                    //System.out.println(entry);
+                    updatePurchaseStock(entry.getKey(), entry.getValue());
                 }
             }
         };
@@ -163,10 +192,18 @@ public class OrderCreationService {
             int supplierId = entry.getKey();
             Supplier supplier = supplierService.findSupplierById(supplierId);
             if (supplier != null) {
+                Map<Integer, Integer> items = entry.getValue();
+                double total = 0;
+                for (var item : items.entrySet()) {
+                    int quantity = item.getValue();
+                    double price = supplier.getItemById(item.getKey()).getSupplierPrice();
+                    total += quantity * price;
+                }
                 supplier.addOrderRecord(new SupplierOrderRecord(
                     order.getId(),
                     order.getTransaction().getTransactionDate(),
-                    entry.getValue()
+                    total,
+                    items
                 ));
             }
         }

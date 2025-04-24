@@ -2,7 +2,6 @@ package services;
 
 import models.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,16 +22,28 @@ public class OrderService {
     }
 
     // Order Creation
-    public void createOrder(Map<String, Integer> products, LocalDate arrival, FinancialTransaction.Type type) {
-        Order.Status status = Order.Status.PROCESSED;
-        if (type == FinancialTransaction.Type.SALE) {
-            status = Order.Status.DELIVERED;
-        }
-        Order order = orderCreationService.createOrder(products, arrival, status, type);
+    public void createOrder(Map<String, Integer> products, FinancialTransaction.Type type) {
+        Order order = generateOrder(products, type);
         orders.add(order);
         if (type == FinancialTransaction.Type.PURCHASE) {
-            deliveryStatusManager(order, orderCreationService.getStockUpdateTask(order));
-        };
+            schedulePurchaseDelivery(order);
+        }
+    }
+    
+    private Order generateOrder(Map<String, Integer> products, FinancialTransaction.Type type) {
+        Order.Status status;
+        if (type == FinancialTransaction.Type.SALE) {
+            status = Order.Status.DELIVERED;
+        } else {
+            status = Order.Status.PROCESSED;
+        }
+    
+        return orderCreationService.createOrder(products, status, type);
+    }
+    
+    private void schedulePurchaseDelivery(Order order) {
+        Runnable stockUpdateTask = orderCreationService.getStockUpdateTask(order);
+        deliveryStatusManager(order, stockUpdateTask);
     }
 
     // Order Retrieval

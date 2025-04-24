@@ -10,16 +10,14 @@ public class Order {
 
     private int id;
     private Map<String, Integer> products; // key = item id or supplier:supplierItem
-    private LocalDate estimatedArrival;
     private Status status;
     private FinancialTransaction transaction;
 
     // Constructor
-    public Order(int id, Map<String, Integer> products, LocalDate estimatedArrival,
+    public Order(int id, Map<String, Integer> products,
                  Status status, FinancialTransaction transaction) {
         this.id = id;
         this.products = products;
-        this.estimatedArrival = estimatedArrival;
         this.status = status;
         this.transaction = transaction;
     }
@@ -31,10 +29,6 @@ public class Order {
 
     public Map<String, Integer> getProducts() {
         return products;
-    }
-
-    public LocalDate getEstimatedArrival() {
-        return estimatedArrival;
     }
 
     public Status getStatus() {
@@ -54,6 +48,6 @@ public class Order {
     @Override
     public String toString() {
         return "Order #" + id + " | Type: " + transaction.getType() +
-               " | Status: " + status + " | ETA: " + estimatedArrival + "\n" + transaction;
+               " | Status: " + status + "\n" + transaction;
     }
 }

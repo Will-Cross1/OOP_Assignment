@@ -1,4 +1,3 @@
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,17 +61,25 @@ public class Main
 
         orderService.createOrder(
             saleProducts,
-            LocalDate.of(2025, 5, 1),
             FinancialTransaction.Type.SALE
         );
 
         // --- PURCHASE ORDER ---
         Map<String, Integer> purchaseProducts = new HashMap<>();
         purchaseProducts.put("3:3", 5); // Supplier 3, item 3
+        purchaseProducts.put("3:2", 5);
 
         orderService.createOrder(
             purchaseProducts,
-            LocalDate.of(2025, 6, 1),
+            FinancialTransaction.Type.PURCHASE
+        );
+
+        Map<String, Integer> purchaseProducts2 = new HashMap<>();
+        purchaseProducts2.put("3:3", 2);
+        purchaseProducts2.put("3:2", 58);
+
+        orderService.createOrder(
+            purchaseProducts2,
             FinancialTransaction.Type.PURCHASE
         );
 
@@ -101,7 +108,7 @@ public class Main
 
         // --- INVENTORY SERVICE NEW METHODS ---
         System.out.println("\n=== UPDATED PRICE & QUANTITY ===");
-        inventoryService.updateItemQuantity(2, 100);
+        //inventoryService.updateItemQuantity(2, 100);
         inventoryService.updateItemPrice(2, 30.0);
         inventoryService.printInventory();
 
@@ -141,15 +148,13 @@ public class Main
         }
         // Step 3: Print all-time financial report
         System.out.println("All-Time Financial Report:");
-        financialService.printAllTimeFinancialReport();  // Uses existing method
+        financialService.printAllTimeFinancialReport();
 
         // Step 4: Print financial report for a specific item
-        int itemId = 2; // Replace with an actual item ID
+        int itemId = 2;
         System.out.println("Financial Report for Item ID " + itemId + ":");
-        financialService.printFinancialReportByItem(itemId);  // Uses existing method
+        financialService.printFinancialReportByItem(itemId);
 
-        // Optionally, you can add more calls to other existing methods in FinancialService
-        // Example: Print financial report for an item (ID = 3)
         itemId = 3;
         System.out.println("Financial Report for Item ID " + itemId + ":");
         financialService.printFinancialReportByItem(itemId);
