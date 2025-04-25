@@ -46,7 +46,7 @@ public class Main
         supplierService.createSupplierItem(3, 1, 1423);
         supplierService.createSupplierItem(3, 2, 23);
         supplierService.createSupplierItem(3, 3, 64);
-
+/* 
         System.out.println("\n=== ALL SUPPLIERS AND THEIR ITEMS ===");
         for (Supplier s : supplierService.getAllSuppliers()) {
             System.out.println(s);
@@ -149,7 +149,7 @@ public class Main
         // Step 3: Print all-time financial report
         System.out.println("All-Time Financial Report:");
         financialService.printAllTimeFinancialReport();
-
+ */
         // Launch UI with services injected
         VisualInterface ui = new VisualInterface(supplierService, inventoryService);
         ui.run();
