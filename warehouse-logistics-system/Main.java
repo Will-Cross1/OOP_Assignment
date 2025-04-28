@@ -31,10 +31,10 @@ public class Main
         inventoryService.addInventoryItem(1, "Laptop", "15-inch portable computer", 1000.0, 10);
         inventoryService.addInventoryItem(2, "Mouse", "Wireless optical mouse", 25.0, 50);
         inventoryService.addInventoryItem(3, "Keyboard", "Mechanical keyboard", 70.0, 30);
-
+/* 
         System.out.println("=== INVENTORY AFTER ADDITION ===");
         inventoryService.printInventory();
-
+ */
         // --- SUPPLIER SETUP ---
         supplierService.addSupplier("Acme Supplies", "acme@supplies.com", "02081234567", "London");
         supplierService.addSupplier("Global Distributors", "contact@global.com", "01709876543", "Birmingham");
@@ -151,7 +151,7 @@ public class Main
         financialService.printAllTimeFinancialReport();
  */
         // Launch UI with services injected
-        VisualInterface ui = new VisualInterface(supplierService, inventoryService);
+        VisualInterface ui = new VisualInterface(supplierService, inventoryService, orderService);
         ui.run();
     }
 }

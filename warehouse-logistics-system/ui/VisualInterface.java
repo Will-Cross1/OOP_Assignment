@@ -14,14 +14,16 @@ public class VisualInterface
     private Scanner scanner;
     private SupplierService supplierService;
     private InventoryService inventoryService;
+    private OrderService orderService;
     /**
      * Constructor for objects of class VisualInterface
      */
-    public VisualInterface(SupplierService supplierService, InventoryService inventoryService)
+    public VisualInterface(SupplierService supplierService, InventoryService inventoryService, OrderService orderService)
     {
         this.scanner = new Scanner(System.in);
         this.supplierService = supplierService;
         this.inventoryService = inventoryService;
+        this.orderService = orderService;
     }
 
     /**
@@ -47,7 +49,7 @@ public class VisualInterface
             switch (choice) {
                 case 1 -> new SupplierMenu(scanner).run();
                 case 2 -> new InventoryMenu(scanner).run();
-                case 3 -> new CustomerOrderMenu(scanner).run();
+                case 3 -> new CustomerOrderMenu(scanner, inventoryService, orderService).run();
                 case 4 -> new FinanceMenu(scanner).run();
                 case 0 -> {
                     System.out.println("Exiting...");

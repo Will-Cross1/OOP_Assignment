@@ -22,12 +22,14 @@ public class OrderService {
     }
 
     // Order Creation
-    public void createOrder(Map<String, Integer> products, FinancialTransaction.Type type) {
+    public int createOrder(Map<String, Integer> products, FinancialTransaction.Type type) {
         Order order = generateOrder(products, type);
         orders.add(order);
         if (type == FinancialTransaction.Type.PURCHASE) {
             schedulePurchaseDelivery(order);
         }
+        int id = order.getId();
+        return id;
     }
     
     private Order generateOrder(Map<String, Integer> products, FinancialTransaction.Type type) {

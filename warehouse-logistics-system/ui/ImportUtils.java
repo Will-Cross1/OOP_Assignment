@@ -11,4 +11,8 @@ public class ImportUtils {
             return -1; // Invalid input
         }
     }
+
+    public static String getUserChoiceStr(Scanner scanner) {
+        return (scanner.nextLine());
+    }
 }
