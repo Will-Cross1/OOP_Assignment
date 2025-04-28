@@ -20,8 +20,7 @@ public class SupplierMenu {
             System.out.println("4. Delete Supplier");
             System.out.println("5. Create Purchase Order");
             System.out.println("6. Track Order Status");
-            System.out.println("7. Update Supplier Items");
-            System.out.println("8. View Order History");
+            System.out.println("7. View Order History");
             System.out.println("0. Back to Main Menu");
             System.out.print("Select an option: ");
     
@@ -32,10 +31,9 @@ public class SupplierMenu {
                 case 2 -> addSupplier();
                 case 3 -> updateSupplier();
                 case 4 -> deleteSupplier();
-                case 5 -> System.out.println("Create Purchase Order - [Placeholder]");
-                case 6 -> System.out.println("Track Order Status - [Placeholder]");
-                case 7 -> System.out.println("Update Supplier Items - [Placeholder]");
-                case 8 -> System.out.println("View Order History - [Placeholder]");
+                case 5 -> createPurchaseOrder();
+                case 6 -> trackOrderStatus();
+                case 7 -> viewOrderHistory();
                 case 0 -> back = true;
                 default -> System.out.println("Invalid option. Try again.");
             }
@@ -43,10 +41,29 @@ public class SupplierMenu {
     }
 
     private void viewSuppliers() {
-        System.out.println("\n-- Supplier List --");
-        for (Supplier s : supplierService.getAllSuppliers()) {
-            System.out.println(s);
+        boolean back = false;
+
+        while (!back) {
+            System.out.println("\n-- View Suppliers --");
+            System.out.println("1. View All Suppliers");
+            System.out.println("2. Search by Supplier ID");
+            System.out.println("0. Back");
+            System.out.print("Select an option: ");
+
+            int choice = ImportUtils.getUserChoice(scanner);
+
+            switch (choice) {
+                case 1 -> System.out.println("Showing all suppliers... [Placeholder]");
+                case 2 -> {
+                    System.out.print("Enter Supplier ID: ");
+                    String id = scanner.nextLine();
+                    System.out.println("Searching for suppliers ID: " + id + " [Placeholder]");
+                }
+                case 0 -> back = true;
+                default -> System.out.println("Invalid option. Try again.");
+            }
         }
+        
     }
 
     private void addSupplier() {
@@ -85,7 +102,8 @@ public class SupplierMenu {
             System.out.println("1. Name");
             System.out.println("2. Contact (Email & Phone)");
             System.out.println("3. Location");
-            System.out.println("4. All fields");
+            System.out.println("4. Items");
+            System.out.println("5. All fields");
             System.out.println("0. Cancel");
             System.out.print("Choice: ");
             int choice = ImportUtils.getUserChoice(scanner);
@@ -111,6 +129,9 @@ public class SupplierMenu {
                     location = scanner.nextLine();
                 }
                 case 4 -> {
+                    System.out.print("new item price: [Placeholder]");
+                }
+                case 5 -> {
                     System.out.print("Enter new Name: ");
                     name = scanner.nextLine();
                     System.out.print("Enter new Email: ");
@@ -151,5 +172,17 @@ public class SupplierMenu {
         } else {
             System.out.println("Supplier not found.");
         }
+    }
+
+    private void createPurchaseOrder() {
+        System.out.println("Create Purchase Order - [Placeholder]");
+    }
+
+    private void trackOrderStatus() {
+        System.out.println("Track Order Status - [Placeholder]");
+    }
+
+    private void viewOrderHistory() {
+        System.out.println("View Order History - [Placeholder]");
     }
 }
