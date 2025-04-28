@@ -1,12 +1,22 @@
 package ui;
 
+import java.util.Map;
 import java.util.Scanner;
+
+import models.FinancialTransaction;
+import models.Order;
+import services.OrderService;
+import services.FinancialService;
 
 public class FinanceMenu {
     private final Scanner scanner;
+    private OrderService orderService;
+    private FinancialService financialService;
 
-    public FinanceMenu(Scanner scanner) {
+    public FinanceMenu(Scanner scanner, OrderService orderService, FinancialService financialService) {
         this.scanner = scanner;
+        this.orderService = orderService;
+        this.financialService = financialService;
     }
 
     public void run() {
@@ -46,9 +56,24 @@ public class FinanceMenu {
             int choice = ImportUtils.getUserChoice(scanner);
 
             switch (choice) {
-                case 1 -> System.out.println("Showing all transactions... [Placeholder]");
-                case 2 -> System.out.println("Showing purchase transactions... [Placeholder]");
-                case 3 -> System.out.println("Showing sale transactions... [Placeholder]");
+                case 1 -> {
+                    System.out.println("Showing all transactions...");
+                    for (FinancialTransaction transaction : financialService.getAllTransactions()) {
+                        System.out.println(transaction);
+                    }
+                }
+                case 2 -> {
+                    System.out.println("Showing purchase transactions...");
+                    for (FinancialTransaction transaction : financialService.getPurchaseTransactions()) {
+                        System.out.println(transaction);
+                    }
+                }
+                case 3 -> {
+                    System.out.println("Showing sale transactions...");
+                    for (FinancialTransaction transaction : financialService.getSaleTransactions()) {
+                        System.out.println(transaction);
+                    }
+                }
                 case 0 -> back = true;
                 default -> System.out.println("Invalid option. Try again.");
             }
@@ -70,14 +95,30 @@ public class FinanceMenu {
             int choice = ImportUtils.getUserChoice(scanner);
 
             switch (choice) {
-                case 1 -> System.out.println("Showing all orders... [Placeholder]");
+                case 1 -> {
+                    System.out.println("Showing all orders...");
+                    for (Order order : orderService.getAllOrders()) {
+                        System.out.println(order);
+                    }
+                }
                 case 2 -> {
                     System.out.print("Enter Order ID: ");
-                    String id = scanner.nextLine();
-                    System.out.println("Searching for order ID: " + id + " [Placeholder]");
+                    int id = ImportUtils.getUserChoice(scanner);
+                    System.out.println("Searching for order ID: " + id);
+                    System.out.print(orderService.getOrderById(id) + "\n\n");
                 }
-                case 3 -> System.out.println("Showing purchase orders... [Placeholder]");
-                case 4 -> System.out.println("Showing sale orders... [Placeholder]");
+                case 3 -> {
+                    System.out.println("Showing purchase orders...");
+                    for (Order order : orderService.getPurchaseTransactions()) {
+                        System.out.println(order);
+                    }
+                }
+                case 4 -> {
+                    System.out.println("Showing sale orders...");
+                    for (Order order : orderService.getSaleTransactions()) {
+                        System.out.println(order);
+                    }
+                }
                 case 0 -> back = true;
                 default -> System.out.println("Invalid option. Try again.");
             }
@@ -86,5 +127,14 @@ public class FinanceMenu {
 
     private void generateReport() {
         System.out.println("Generating financial report... [Placeholder]");
+
+        Map<String, Object> report = financialService.generateAllTimeFinancialReport();
+
+        System.out.println("=== All-Time Financial Report ===");
+        System.out.println("Total Sales Revenue: £" + report.get("totalRevenue"));
+        System.out.println("Total Purchase Costs: £" + report.get("totalPurchases"));
+        System.out.println("Net Income: £" + report.get("netIncome"));
+        System.out.println((boolean) report.get("isProfit") ? "Profit" : "Loss");
+        System.out.println("=================================");
     }
 }

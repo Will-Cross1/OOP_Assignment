@@ -15,15 +15,17 @@ public class VisualInterface
     private SupplierService supplierService;
     private InventoryService inventoryService;
     private OrderService orderService;
+    private FinancialService financialService;
     /**
      * Constructor for objects of class VisualInterface
      */
-    public VisualInterface(SupplierService supplierService, InventoryService inventoryService, OrderService orderService)
+    public VisualInterface(SupplierService supplierService, InventoryService inventoryService, OrderService orderService, FinancialService financialService)
     {
         this.scanner = new Scanner(System.in);
         this.supplierService = supplierService;
         this.inventoryService = inventoryService;
         this.orderService = orderService;
+        this.financialService = financialService;
     }
 
     /**
@@ -50,7 +52,7 @@ public class VisualInterface
                 case 1 -> new SupplierMenu(scanner).run();
                 case 2 -> new InventoryMenu(scanner).run();
                 case 3 -> new CustomerOrderMenu(scanner, inventoryService, orderService).run();
-                case 4 -> new FinanceMenu(scanner).run();
+                case 4 -> new FinanceMenu(scanner, orderService, financialService).run();
                 case 0 -> {
                     System.out.println("Exiting...");
                     running = false;

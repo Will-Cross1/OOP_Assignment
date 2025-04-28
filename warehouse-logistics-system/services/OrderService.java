@@ -53,6 +53,32 @@ public class OrderService {
         return new ArrayList<>(orders); // defensive copy
     }
 
+    public List<Order> getPurchaseTransactions() {
+        List<Order> allOrders = getAllOrders();
+        List<Order> purchaseOrders = new ArrayList<>();
+
+        for (Order order : allOrders) {
+            if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE) {
+                purchaseOrders.add(order);
+            }
+        }
+
+        return purchaseOrders;
+    }
+
+    public List<Order> getSaleTransactions() {
+        List<Order> allOrders = getAllOrders();
+        List<Order> saleOrders = new ArrayList<>();
+
+        for (Order order : allOrders) {
+            if (order.getTransaction().getType() == FinancialTransaction.Type.SALE) {
+                saleOrders.add(order);
+            }
+        }
+
+        return saleOrders;
+    }
+
     public Order getOrderById(int id) {
         for (Order order : orders) {
             if (order.getId() == id) {

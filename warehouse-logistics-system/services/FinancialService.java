@@ -1,5 +1,10 @@
 package services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import models.*;
 
 public class FinancialService {
@@ -10,8 +15,45 @@ public class FinancialService {
         this.orderService = orderService;
     }
 
+    public List<FinancialTransaction> getAllTransactions() {
+        List<Order> orders = orderService.getAllOrders();
+        List<FinancialTransaction> transactions = new ArrayList<>();
+
+        for (Order order : orders) {
+            transactions.add(order.getTransaction());
+        }
+
+        return transactions;
+    }
+
+    public List<FinancialTransaction> getPurchaseTransactions() {
+        List<FinancialTransaction> allTransactions = getAllTransactions();
+        List<FinancialTransaction> purchaseTransactions = new ArrayList<>();
+
+        for (FinancialTransaction transaction : allTransactions) {
+            if (transaction.getType() == FinancialTransaction.Type.PURCHASE) {
+                purchaseTransactions.add(transaction);
+            }
+        }
+
+        return purchaseTransactions;
+    }
+
+    public List<FinancialTransaction> getSaleTransactions() {
+        List<FinancialTransaction> allTransactions = getAllTransactions();
+        List<FinancialTransaction> saleTransactions = new ArrayList<>();
+
+        for (FinancialTransaction transaction : allTransactions) {
+            if (transaction.getType() == FinancialTransaction.Type.SALE) {
+                saleTransactions.add(transaction);
+            }
+        }
+
+        return saleTransactions;
+    }
+
     // All-Time Financial Reporting
-    public void printAllTimeFinancialReport() {
+    public Map<String, Object> generateAllTimeFinancialReport() {
         double totalRevenue = 0;
         double totalPurchases = 0;
 
@@ -26,12 +68,14 @@ public class FinancialService {
         }
 
         double netIncome = totalRevenue - totalPurchases;
+        boolean isProfit = netIncome >= 0;
 
-        System.out.println("=== All-Time Financial Report ===");
-        System.out.println("Total Sales Revenue: £" + totalRevenue);
-        System.out.println("Total Purchase Costs: £" + totalPurchases);
-        System.out.println("Net Income: £" + netIncome);
-        System.out.println(netIncome >= 0 ? "Profit" : "Loss");
-        System.out.println("=================================");
+        Map<String, Object> report = new HashMap<>();
+        report.put("totalRevenue", totalRevenue);
+        report.put("totalPurchases", totalPurchases);
+        report.put("netIncome", netIncome);
+        report.put("isProfit", isProfit);
+
+        return report;
     }
 }
