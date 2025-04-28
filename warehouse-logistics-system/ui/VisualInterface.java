@@ -50,7 +50,7 @@ public class VisualInterface
 
             switch (choice) {
                 case 1 -> new SupplierMenu(scanner).run();
-                case 2 -> new InventoryMenu(scanner).run();
+                case 2 -> new InventoryMenu(scanner, inventoryService).run();
                 case 3 -> new CustomerOrderMenu(scanner, inventoryService, orderService).run();
                 case 4 -> new FinanceMenu(scanner, orderService, financialService).run();
                 case 0 -> {

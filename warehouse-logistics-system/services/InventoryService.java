@@ -81,11 +81,4 @@ public class InventoryService {
         }
         return stockLevels;
     }
-
-    // Display Operations
-    public void printInventory() {
-        for (InventoryItem item : inventory) {
-            System.out.println(item);
-        }
-    }
 }

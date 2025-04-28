@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import models.FinancialTransaction;
+import models.InventoryItem;
 import services.InventoryService;
 import services.OrderService;
 
@@ -23,7 +24,9 @@ public class CustomerOrderMenu {
         System.out.println("\n\nMake Order:");
 
         Map<String, Integer> saleProducts = new HashMap<>();
-        inventoryService.printInventory();
+        for (InventoryItem item : inventoryService.getAllInventoryItems()) {
+            System.out.println(item);
+        }
 
         boolean order = false;
 
@@ -40,7 +43,9 @@ public class CustomerOrderMenu {
             switch (choice) {
                 case 1 -> {
                     System.out.println("\n");
-                    inventoryService.printInventory();
+                    for (InventoryItem item : inventoryService.getAllInventoryItems()) {
+                        System.out.println(item);
+                    }
                 }
                 case 2 -> addItems(saleProducts);
                 case 3 -> order = true;

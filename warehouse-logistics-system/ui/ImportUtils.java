@@ -15,4 +15,8 @@ public class ImportUtils {
     public static String getUserChoiceStr(Scanner scanner) {
         return (scanner.nextLine());
     }
+
+    public static double getUserChoiceDouble(Scanner scanner) {
+        return Double.parseDouble(scanner.nextLine());
+    }
 }
