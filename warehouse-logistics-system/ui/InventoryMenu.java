@@ -21,6 +21,7 @@ public class InventoryMenu {
             System.out.println("\n=== Inventory Management ===");
             System.out.println("1. View Inventory");
             System.out.println("2. Change Prices");
+            System.out.println("3. Add new Item");
             System.out.println("0. Back to Main Menu");
             System.out.print("Select an option: ");
 
@@ -29,6 +30,7 @@ public class InventoryMenu {
             switch (choice) {
                 case 1 -> viewInventory();
                 case 2 -> changePrices();
+                case 3 -> addItem();
                 case 0 -> back = true;
                 default -> System.out.println("Invalid option. Try again.");
             }
@@ -82,5 +84,23 @@ public class InventoryMenu {
         inventoryService.updateItemPrice(id, price);
         System.out.print("Updated");
         System.out.print(inventoryService.findById(id) + "\n\n");
+    }
+
+    private void addItem() {
+        System.out.println("\nAdd Inventory Item");
+    
+        System.out.print("Enter item name: ");
+        String name = ImportUtils.getUserChoiceStr(scanner);
+    
+        System.out.print("Enter description: ");
+        String description = ImportUtils.getUserChoiceStr(scanner);
+    
+        System.out.print("Enter new unit price: ");
+        double unitPrice = ImportUtils.getUserChoiceDouble(scanner);
+    
+        int nextId = inventoryService.getNextAvailableId();
+        inventoryService.addInventoryItem(nextId, name, description, unitPrice, 0);
+    
+        System.out.println("Item added with ID: " + nextId);
     }
 }

@@ -64,6 +64,32 @@ public class InventoryService {
     }
 
     /**
+     * Returns a map of items with stock levels below 20.
+     */
+    public Map<InventoryItem, Integer> getLowStockItems() {
+        Map<InventoryItem, Integer> lowStock = new HashMap<>();
+        for (InventoryItem item : inventory) {
+            if (item.getQuantity() < 20) {
+                lowStock.put(item, item.getQuantity());
+            }
+        }
+        return lowStock;
+    }
+
+    /**
+     * Get the next available ID for InventoryItem.
+     */
+    public int getNextAvailableId() {
+        int maxId = 0;
+        for (InventoryItem item : inventory) {
+            if (item.getId() > maxId) {
+                maxId = item.getId();
+            }
+        }
+        return maxId + 1;
+    }
+
+    /**
      * Get the stock level for a specific item by ID.
      */
     public Integer getStockLevelById(int id) {

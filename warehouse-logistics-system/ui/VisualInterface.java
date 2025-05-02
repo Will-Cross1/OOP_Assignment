@@ -1,7 +1,9 @@
 package ui;
 
+import java.util.Map;
 import java.util.Scanner;
 
+import models.InventoryItem;
 import services.*;
 /**
  * Write a description of class VisualInterface here.
@@ -38,6 +40,17 @@ public class VisualInterface
         boolean running = true;
 
         while (running) {
+            // Check and display low stock items before menu
+            Map<InventoryItem, Integer> lowStockItems = inventoryService.getLowStockItems();
+            if (!lowStockItems.isEmpty()) {
+                System.out.println("\n*** WARNING: Low Stock Items ***");
+                for (Map.Entry<InventoryItem, Integer> entry : lowStockItems.entrySet()) {
+                    InventoryItem item = entry.getKey();
+                    System.out.printf("- %s (ID: %d): %d units in stock%n", item.getName(), item.getId(), entry.getValue());
+                }
+                System.out.println("*********************************");
+            }
+            
             System.out.println("\n=== BNU Warehouse Management System ===");
             System.out.println("1. Supplier Management");
             System.out.println("2. Inventory Management");
@@ -49,7 +62,7 @@ public class VisualInterface
             int choice = ImportUtils.getUserChoice(scanner);
 
             switch (choice) {
-                case 1 -> new SupplierMenu(scanner).run();
+                case 1 -> new SupplierMenu(scanner, supplierService, orderService, inventoryService).run();
                 case 2 -> new InventoryMenu(scanner, inventoryService).run();
                 case 3 -> new CustomerOrderMenu(scanner, inventoryService, orderService).run();
                 case 4 -> new FinanceMenu(scanner, orderService, financialService).run();
@@ -62,5 +75,6 @@ public class VisualInterface
         }
 
         scanner.close();
+        System.exit(0);
     }
 }
