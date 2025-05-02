@@ -38,6 +38,33 @@ public class SupplierService {
         return false;
     }
 
+    public boolean updateSupplierName(int id, String newName) {
+        Supplier supplier = findSupplierById(id);
+        if (supplier != null) {
+            supplier.setName(newName);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean updateSupplierContact(int id, String newEmail, String newPhone) {
+        Supplier supplier = findSupplierById(id);
+        if (supplier != null) {
+            supplier.setContact(newEmail, newPhone);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean updateSupplierLocation(int id, String newLocation) {
+        Supplier supplier = findSupplierById(id);
+        if (supplier != null) {
+            supplier.setLocation(newLocation);
+            return true;
+        }
+        return false;
+    }
+
     public boolean deleteSupplier(int id) {
         Supplier supplier = findSupplierById(id);
         if (supplier != null) {
