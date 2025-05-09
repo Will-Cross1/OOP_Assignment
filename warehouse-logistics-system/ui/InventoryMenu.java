@@ -5,15 +5,28 @@ import java.util.Scanner;
 import models.InventoryItem;
 import services.InventoryService;
 
+/**
+ * Handles the user interface for inventory management.
+ * Provides options to view inventory, change prices, and add new items.
+ */
 public class InventoryMenu {
     private final Scanner scanner;
     private InventoryService inventoryService;
 
+    /**
+     * Constructs a new InventoryMenu.
+     *
+     * @param scanner           the Scanner for reading user input
+     * @param inventoryService  the service responsible for inventory operations
+     */
     public InventoryMenu(Scanner scanner, InventoryService inventoryService) {
         this.scanner = scanner;
         this.inventoryService = inventoryService;
     }
 
+    /**
+     * Runs the inventory menu loop until the user chooses to exit.
+     */
     public void run() {
         boolean back = false;
 
@@ -37,6 +50,9 @@ public class InventoryMenu {
         }
     }
 
+    /**
+     * Displays the inventory viewing submenu, allowing the user to see all items or search by ID.
+     */
     private void viewInventory() {
         boolean back = false;
 
@@ -68,6 +84,9 @@ public class InventoryMenu {
         }
     }
 
+    /**
+     * Prompts the user to select an item by ID and update its price.
+     */
     private void changePrices() {
         System.out.println("Change Prices");
         for (InventoryItem item : inventoryService.getAllInventoryItems()) {
@@ -86,21 +105,24 @@ public class InventoryMenu {
         System.out.print(inventoryService.findById(id) + "\n\n");
     }
 
+    /**
+     * Prompts the user to enter information for a new inventory item and adds it to the inventory.
+     */
     private void addItem() {
         System.out.println("\nAdd Inventory Item");
-    
+
         System.out.print("Enter item name: ");
         String name = ImportUtils.getUserChoiceStr(scanner);
-    
+
         System.out.print("Enter description: ");
         String description = ImportUtils.getUserChoiceStr(scanner);
-    
+
         System.out.print("Enter new unit price: ");
         double unitPrice = ImportUtils.getUserChoiceDouble(scanner);
-    
+
         int nextId = inventoryService.getNextAvailableId();
         inventoryService.addInventoryItem(nextId, name, description, unitPrice, 0);
-    
+
         System.out.println("Item added with ID: " + nextId);
     }
 }

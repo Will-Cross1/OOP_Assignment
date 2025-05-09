@@ -1,7 +1,16 @@
 package models;
 
 /**
- * Represents an item in the warehouse inventory
+ * Represents an item in the warehouse inventory, extending the base `Item` class with additional 
+ * attributes for unit price and quantity.
+ * 
+ * This class is used to manage inventory items, including the unit price and available stock 
+ * quantity in the warehouse. It extends the `Item` class to inherit basic item attributes such as 
+ * ID, name, and description, while introducing the `unitPrice` and `quantity` attributes to represent 
+ * the price per unit and the quantity of items available in stock.
+ * 
+ * Provides methods for accessing and modifying the unit price and quantity, as well as a formatted 
+ * string representation of the item.
  */
 public class InventoryItem extends Item {
     private double unitPrice;

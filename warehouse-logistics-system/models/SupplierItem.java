@@ -1,7 +1,16 @@
 package models;
 
 /**
- * Represents an item from a supplier with a specific price
+ * Represents an item provided by a supplier, extending the base Item class with an additional 
+ * attribute for the supplier's price.
+ * 
+ * This class is used to store and manage details about items sourced from suppliers, including 
+ * the item's price specific to the supplier. It extends the `Item` class to inherit basic 
+ * item attributes such as ID, name, and description, while also introducing the `supplierPrice` 
+ * attribute to represent the cost at which the supplier offers the item.
+ * 
+ * Provides methods for accessing and modifying the supplier price, as well as a formatted string 
+ * representation of the item.
  */
 public class SupplierItem extends Item {
     private double supplierPrice;

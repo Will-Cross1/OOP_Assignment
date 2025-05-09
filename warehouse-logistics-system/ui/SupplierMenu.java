@@ -13,6 +13,9 @@ import services.SupplierService;
 import services.OrderService;
 import services.InventoryService;
 
+/**
+ * Menu UI class responsible for supplier and purchase order management.
+ */
 public class SupplierMenu {
     private final Scanner scanner;
     private SupplierService supplierService;
@@ -26,9 +29,12 @@ public class SupplierMenu {
         this.inventoryService = inventoryService;
     }
 
+    /**
+     * Main menu loop for supplier operations.
+     */
     public void run() {
         boolean back = false;
-    
+
         while (!back) {
             System.out.println("\n=== Supplier Management ===");
             System.out.println("1. View Suppliers");
@@ -40,9 +46,9 @@ public class SupplierMenu {
             System.out.println("7. View Order History");
             System.out.println("0. Back to Main Menu");
             System.out.print("Select an option: ");
-    
+
             int choice = ImportUtils.getUserChoice(scanner);
-    
+
             switch (choice) {
                 case 1 -> viewSuppliers();
                 case 2 -> addSupplier();
@@ -57,6 +63,9 @@ public class SupplierMenu {
         }
     }
 
+    /**
+     * Displays a list of all suppliers or allows searching by ID.
+     */
     private void viewSuppliers() {
         boolean back = false;
 
@@ -86,9 +95,11 @@ public class SupplierMenu {
                 default -> System.out.println("Invalid option. Try again.");
             }
         }
-        
     }
 
+    /**
+     * Prompts user for supplier details and adds the supplier along with items they can supply.
+     */
     private void addSupplier() {
         System.out.println("\n=== Add Supplier ===");
 
@@ -104,23 +115,21 @@ public class SupplierMenu {
         System.out.print("Enter Location: ");
         String location = ImportUtils.getUserChoiceStr(scanner);
 
-        //Supplier is added, then supplier items are added
         Supplier newSupplier = supplierService.addSupplier(name, email, phone, location);
         int supplierId = newSupplier.getId();
 
-        // Display all available inventory items
+        // Display available inventory items
         for (InventoryItem item : inventoryService.getAllInventoryItems()) {
             System.out.println(item);
         }
 
-        // Allow user to add multiple supplier items
+        // Add items supplied by the new supplier
         while (true) {
             System.out.print("\nEnter InventoryItem ID to add (or -1 to finish): ");
             int inventoryItemId = ImportUtils.getUserChoice(scanner);
 
-            if (inventoryItemId == -1) {
-                break;
-            }
+            if (inventoryItemId == -1) break;
+
             InventoryItem item = inventoryService.findById(inventoryItemId);
             if (item == null) {
                 System.out.println("Invalid InventoryItem ID. Please try again.");
@@ -137,17 +146,20 @@ public class SupplierMenu {
         System.out.println("Supplier added successfully with ID: " + supplierId);
     }
 
+    /**
+     * Updates supplier information including contact, location, or supplied items.
+     */
     private void updateSupplier() {
         System.out.println("\n=== Update Supplier ===");
         System.out.print("Enter Supplier ID to update: ");
         int id = ImportUtils.getUserChoice(scanner);
-    
+
         Supplier supplier = supplierService.findSupplierById(id);
         if (supplier == null) {
             System.out.println("Supplier not found.");
             return;
         }
-    
+
         boolean back = false;
         while (!back) {
             System.out.println("\nSelect what to update:");
@@ -159,38 +171,30 @@ public class SupplierMenu {
             System.out.println("0. Cancel");
             System.out.print("Choice: ");
             int choice = ImportUtils.getUserChoice(scanner);
-    
+
             switch (choice) {
                 case 1 -> {
                     System.out.print("Enter new Name: ");
                     String newName = ImportUtils.getUserChoiceStr(scanner);
-                    if (supplierService.updateSupplierName(id, newName)) {
-                        System.out.println("Name updated.");
-                    } else {
-                        System.out.println("Failed to update name.");
-                    }
+                    System.out.println(supplierService.updateSupplierName(id, newName)
+                            ? "Name updated." : "Failed to update name.");
                 }
                 case 2 -> {
                     System.out.print("Enter new Email: ");
                     String newEmail = ImportUtils.getUserChoiceStr(scanner);
                     System.out.print("Enter new Phone: ");
                     String newPhone = ImportUtils.getUserChoiceStr(scanner);
-                    if (supplierService.updateSupplierContact(id, newEmail, newPhone)) {
-                        System.out.println("Contact updated.");
-                    } else {
-                        System.out.println("Failed to update contact.");
-                    }
+                    System.out.println(supplierService.updateSupplierContact(id, newEmail, newPhone)
+                            ? "Contact updated." : "Failed to update contact.");
                 }
                 case 3 -> {
                     System.out.print("Enter new Location: ");
                     String newLocation = ImportUtils.getUserChoiceStr(scanner);
-                    if (supplierService.updateSupplierLocation(id, newLocation)) {
-                        System.out.println("Location updated.");
-                    } else {
-                        System.out.println("Failed to update location.");
-                    }
+                    System.out.println(supplierService.updateSupplierLocation(id, newLocation)
+                            ? "Location updated." : "Failed to update location.");
                 }
                 case 4 -> {
+                    // Manage supplier's item list
                     boolean done = false;
                     while (!done) {
                         System.out.println("\n--- Update Supplier Items ---");
@@ -200,7 +204,7 @@ public class SupplierMenu {
                         System.out.println("0. Back");
                         System.out.print("Choice: ");
                         int itemChoice = ImportUtils.getUserChoice(scanner);
-                
+
                         switch (itemChoice) {
                             case 1 -> {
                                 System.out.print("Enter Inventory Item ID: ");
@@ -219,20 +223,14 @@ public class SupplierMenu {
                                 int itemId = ImportUtils.getUserChoice(scanner);
                                 System.out.print("Enter new Supplier Price: ");
                                 double newPrice = ImportUtils.getUserChoiceDouble(scanner);
-                                if (supplierService.updateSupplierPrice(id, itemId, newPrice)) {
-                                    System.out.println("Item price updated.");
-                                } else {
-                                    System.out.println("Failed to update item price. Check if item exists.");
-                                }
+                                System.out.println(supplierService.updateSupplierPrice(id, itemId, newPrice)
+                                        ? "Item price updated." : "Failed to update item price. Check if item exists.");
                             }
                             case 3 -> {
                                 System.out.print("Enter Supplier Item ID to remove: ");
                                 int itemId = ImportUtils.getUserChoice(scanner);
-                                if (supplierService.removeSupplierItem(id, itemId)) {
-                                    System.out.println("Item removed.");
-                                } else {
-                                    System.out.println("Failed to remove item. Check if item exists.");
-                                }
+                                System.out.println(supplierService.removeSupplierItem(id, itemId)
+                                        ? "Item removed." : "Failed to remove item. Check if item exists.");
                             }
                             case 0 -> done = true;
                             default -> System.out.println("Invalid option.");
@@ -248,14 +246,10 @@ public class SupplierMenu {
                     String newPhone = ImportUtils.getUserChoiceStr(scanner);
                     System.out.print("Enter new Location: ");
                     String newLocation = ImportUtils.getUserChoiceStr(scanner);
-    
+
                     boolean updated = supplierService.updateSupplier(id, newName, newEmail, newPhone, newLocation);
-    
-                    if (updated) {
-                        System.out.println("Supplier updated.");
-                    } else {
-                        System.out.println("Nothing was updated.");
-                    }
+
+                    System.out.println(updated ? "Supplier updated." : "Nothing was updated.");
                 }
                 case 0 -> {
                     System.out.println("Update cancelled.");
@@ -266,21 +260,24 @@ public class SupplierMenu {
         }
     }
 
+    /**
+     * Deletes a supplier by ID.
+     */
     private void deleteSupplier() {
         System.out.print("\nEnter Supplier ID to delete: ");
         int id = ImportUtils.getUserChoice(scanner);
 
         boolean removed = supplierService.deleteSupplier(id);
-        if (removed) {
-            System.out.println("Supplier deleted successfully.");
-        } else {
-            System.out.println("Supplier not found.");
-        }
+        System.out.println(removed ? "Supplier deleted successfully." : "Supplier not found.");
     }
 
+    /**
+     * Creates a new purchase order with selected items and supplier.
+     */
     private void createPurchaseOrder() {
         System.out.println("\nCreate Purchase Order - [Placeholder]");
         Map<String, Integer> saleProducts = new HashMap<>();
+
         for (Supplier supplier : supplierService.getAllSuppliers()) {
             System.out.println(supplier);
         }
@@ -299,7 +296,7 @@ public class SupplierMenu {
 
             switch (choice) {
                 case 1 -> {
-                    System.out.println("\n");
+                    System.out.println();
                     for (Supplier supplier : supplierService.getAllSuppliers()) {
                         System.out.println(supplier);
                     }
@@ -323,39 +320,52 @@ public class SupplierMenu {
                     saleProducts,
                     FinancialTransaction.Type.PURCHASE
                 );
-                System.out.println("Order sent!");
-                System.out.print(orderService.getOrderById(orderId) + "\n\n");
-            } catch (IllegalArgumentException e){
-                System.out.print(e.getMessage());
-            };
+                System.out.println("Order placed successfully with ID: " + orderId);
+            } catch (Exception e) {
+                System.out.println("Failed to place order: " + e.getMessage());
+            }
         } else {
-            System.out.println("Order canceled");
-            return;
+            System.out.println("Order cancelled.");
         }
     }
 
+    /**
+     * Adds items to a sale by selecting suppliers and items. 
+     * The user can choose a supplier, view their available items, 
+     * and then add the desired items with their quantities to the sale.
+     * This method continues until the user stops adding items or finishes with all suppliers.
+     * 
+     * @param saleProducts A map containing the current products being added to the sale. 
+     *                     The key is a concatenation of the supplier ID and item ID, and the value is the quantity.
+     * @return The updated map of sale products with added quantities.
+     */
     private Map<String, Integer> addItems(Map<String, Integer> saleProducts) {
         while (true) {
+            // Display all available suppliers
             System.out.println("\nAvailable Suppliers:");
             for (Supplier supplier : supplierService.getAllSuppliers()) {
                 System.out.println(supplier);
             }
 
+            // Prompt the user to enter a supplier ID or -1 to stop adding
             System.out.print("Enter supplier ID (or -1 to stop adding): ");
             int supplierId = ImportUtils.getUserChoice(scanner);
             if (supplierId == -1) break;
 
+            // Find the supplier by ID
             Supplier supplier = supplierService.findSupplierById(supplierId);
             if (supplier == null) {
                 System.out.println("Invalid supplier ID.");
                 continue;
             }
 
+            // Allow the user to add items from the selected supplier
             boolean doneWithSupplier = false;
             while (!doneWithSupplier) {
                 System.out.println("\nItems from " + supplier.getName() + ":");
                 System.out.print(supplier);
 
+                // Prompt the user to select an item or finish with the current supplier
                 System.out.print("\nEnter item ID to add (or -1 to finish with this supplier): ");
                 int itemId = ImportUtils.getUserChoice(scanner);
                 if (itemId == -1) {
@@ -363,15 +373,18 @@ public class SupplierMenu {
                     continue;
                 }
 
+                // Find the item by ID and handle invalid selections
                 SupplierItem selectedItem = supplier.getItemById(itemId);
                 if (selectedItem == null) {
                     System.out.println("Invalid item ID.");
                     continue;
                 }
 
+                // Get the quantity of the item to be added
                 System.out.print("Enter quantity: ");
                 int quantity = ImportUtils.getUserChoice(scanner);
 
+                // Update the saleProducts map with the added quantity
                 String key = supplierId + ":" + itemId;
                 saleProducts.put(key, saleProducts.getOrDefault(key, 0) + quantity);
                 System.out.println("Added " + quantity + " of " + selectedItem.getName() + ".");
@@ -380,18 +393,30 @@ public class SupplierMenu {
         return saleProducts;
     }
 
+    /**
+     * Displays all orders and allows the user to track the status of each one.
+     * This method iterates over all orders and prints each one to the console.
+     */
     private void trackOrderStatus() {
         System.out.println("\nTrack Order Status");
+        // Display all orders
         for (Order order : orderService.getAllOrders()) {
             System.out.println(order);
         }
     }
 
+    /**
+     * Displays the order history for a specific supplier.
+     * The user is prompted to enter the supplier's ID, and the method then
+     * retrieves and displays the supplier's order history.
+     */
     private void viewSupplierOrderHistory() {
         System.out.println("\nView Order History");
+        // Prompt for the supplier's ID
         System.out.print("Enter supplier ID: ");
         int id = ImportUtils.getUserChoice(scanner);
-        System.out.println("Searching for suppliers ID: " + id);
+        System.out.println("Searching for supplier ID: " + id);
+        // Display the supplier's order history
         System.out.print(supplierService.getOrderHistoryForSupplier(id) + "\n\n");
     }
 }

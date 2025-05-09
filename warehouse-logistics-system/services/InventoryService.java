@@ -7,6 +7,16 @@ import java.util.Map;
 
 import models.InventoryItem;
 
+/**
+ * InventoryService manages the inventory of items in a warehouse.
+ * It provides methods to add, remove, update, and retrieve inventory items.
+ * The service also includes functionality to check stock levels and generate reports.
+ * 
+ * This class is responsible for maintaining the inventory state and providing
+ * operations related to inventory management.
+ * It uses a list to store inventory items and provides methods to manipulate
+ * and retrieve these items based on various criteria.
+ */
 public class InventoryService {
     private List<InventoryItem> inventory;
 
@@ -21,6 +31,11 @@ public class InventoryService {
         inventory.add(item);
     }
 
+    /**
+     * Removes an inventory item by its ID.
+     * 
+     * @param id The ID of the item to remove.
+     */
     public void removeItemById(int id) {
         inventory.removeIf(item -> item.getId() == id);
     }
@@ -51,9 +66,15 @@ public class InventoryService {
 
     // Inventory Retrieval Operations
     public List<InventoryItem> getAllInventoryItems() {
-        return inventory;
+        return new ArrayList<>(inventory);
     }
 
+    /**
+     * Finds and returns an inventory item by its ID.
+     * 
+     * @param id The ID to search for.
+     * @return The matching InventoryItem, or null if not found.
+     */
     public InventoryItem findById(int id) {
         for (InventoryItem item : inventory) {
             if (item.getId() == id) {

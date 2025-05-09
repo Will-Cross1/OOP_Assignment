@@ -8,17 +8,32 @@ import models.Order;
 import services.OrderService;
 import services.FinancialService;
 
+/**
+ * Handles the finance-related menu for viewing transactions, orders,
+ * and generating financial reports.
+ */
 public class FinanceMenu {
     private final Scanner scanner;
     private OrderService orderService;
     private FinancialService financialService;
 
+    /**
+     * Constructs a FinanceMenu with the provided services.
+     *
+     * @param scanner           the Scanner for user input
+     * @param orderService      the service for retrieving orders
+     * @param financialService  the service for managing financial transactions
+     */
     public FinanceMenu(Scanner scanner, OrderService orderService, FinancialService financialService) {
         this.scanner = scanner;
         this.orderService = orderService;
         this.financialService = financialService;
     }
 
+    /**
+     * Launches the finance menu loop, allowing users to select
+     * different financial views and actions.
+     */
     public void run() {
         boolean back = false;
 
@@ -42,6 +57,9 @@ public class FinanceMenu {
         }
     }
 
+    /**
+     * Displays the transaction submenu, allowing filtering by type (all, purchase, sale).
+     */
     private void viewTransactions() {
         boolean back = false;
 
@@ -80,6 +98,9 @@ public class FinanceMenu {
         }
     }
 
+    /**
+     * Displays the order submenu, allowing filtering and search by order ID or transaction type.
+     */
     private void viewOrders() {
         boolean back = false;
 
@@ -125,6 +146,10 @@ public class FinanceMenu {
         }
     }
 
+    /**
+     * Generates and displays a simple all-time financial report including total revenue,
+     * purchase costs, net income, and whether the result is profit or loss.
+     */
     private void generateReport() {
         System.out.println("Generating financial report... [Placeholder]");
 

@@ -5,11 +5,12 @@ import models.*;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class OrderCreationService {
     private final InventoryService inventoryService;
     private final SupplierService supplierService;
-    private int nextOrderId = 1;
+    private final AtomicInteger nextOrderId = new AtomicInteger(1);
 
     // Constructor
     public OrderCreationService(
@@ -39,7 +40,8 @@ public class OrderCreationService {
             throw new IllegalArgumentException("Order validation failed: invalid items or insufficient stock.");
         }
         FinancialTransaction transaction = new FinancialTransaction(type, LocalDate.now());
-        Order order = new Order(nextOrderId++, products, status, transaction);
+        int orderId = nextOrderId.getAndIncrement();
+        Order order = new Order(orderId, products, status, transaction);
 
         double total = calculateTransactionTotal(order);
         applyStockChanges(order);
@@ -181,8 +183,8 @@ public class OrderCreationService {
         return () -> {
             if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE &&
                 order.getStatus() == Order.Status.DELIVERED) {
-                Map<String, Integer> entrys = order.getProducts();
-                for (Map.Entry<String, Integer> entry : entrys.entrySet()) {
+                Map<String, Integer> entries = order.getProducts();
+                for (Map.Entry<String, Integer> entry : entries.entrySet()) {
                     updatePurchaseStock(entry.getKey(), entry.getValue());
                 }
             }

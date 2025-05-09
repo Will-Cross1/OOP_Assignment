@@ -3,6 +3,18 @@ package models;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * Represents a record of an order placed with a supplier.
+ *
+ * Each record contains the order ID, date of the order, total cost,
+ * and a map of item IDs to quantities ordered.
+ * This class is primarily used for tracking a supplier's order history.
+ * 
+ * This class is used instead of the Order class for supplier orders,
+ * as it is more focused on the supplier's perspective.
+ * It contains only the necessary information for the supplier,
+ * such as the order ID, date, total cost, and items ordered.
+ */
 public class SupplierOrderRecord {
     private int orderId;
     private LocalDate date;

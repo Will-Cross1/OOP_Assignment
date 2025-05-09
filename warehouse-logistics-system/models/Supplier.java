@@ -3,6 +3,14 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a supplier who provides items and tracks order history.
+ *
+ * This class holds supplier details such as contact information and location,
+ * along with the list of items they supply and their order history.
+ * It provides functionality to manage items (add, update, remove) and record orders.
+ * Defensive copying is used to protect internal collections from external modification.
+ */
 public class Supplier {
     private int id;
     private String name;

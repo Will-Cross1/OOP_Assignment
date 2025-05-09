@@ -9,17 +9,32 @@ import models.InventoryItem;
 import services.InventoryService;
 import services.OrderService;
 
+/**
+ * Handles the customer order menu interface.
+ * Allows users to view inventory, add items to an order, and complete or cancel an order.
+ */
 public class CustomerOrderMenu {
     private final Scanner scanner;
     private InventoryService inventoryService;
     private OrderService orderService;
 
+    /**
+     * Constructs a CustomerOrderMenu with the required services.
+     *
+     * @param scanner           the Scanner for user input
+     * @param inventoryService  the service for managing inventory items
+     * @param orderService      the service for handling customer orders
+     */
     public CustomerOrderMenu(Scanner scanner, InventoryService inventoryService, OrderService orderService) {
         this.scanner = scanner;
         this.inventoryService = inventoryService;
         this.orderService = orderService;
     }
 
+    /**
+     * Runs the customer order process.
+     * Displays inventory, allows adding items to an order, and processes the order on confirmation.
+     */
     public void run() {
         System.out.println("\n\nMake Order:");
 
@@ -70,13 +85,18 @@ public class CustomerOrderMenu {
                 System.out.print(orderService.getOrderById(orderId) + "\n\n");
             } catch (IllegalArgumentException e){
                 System.out.print(e.getMessage());
-            };
+            }
         } else {
             System.out.println("Order canceled");
-            return;
         }
     }
 
+    /**
+     * Prompts the user to enter an item ID and quantity, and adds the item to the order.
+     *
+     * @param saleProducts the current map of product IDs and their quantities
+     * @return the updated map of sale products
+     */
     private Map<String, Integer> addItems(Map<String, Integer> saleProducts) {
         System.out.print("Select an ID: ");
         int id = ImportUtils.getUserChoice(scanner);

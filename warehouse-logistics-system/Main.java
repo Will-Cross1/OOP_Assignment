@@ -6,21 +6,19 @@ import models.*;
 import services.*;
 import ui.VisualInterface;
 /**
- * Write a description of class Main here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * Main class for the Warehouse Logistics System.
  */
 public class Main
 {
 
     /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
+     * The main method to run the warehouse logistics system.
+     * It sets up the services, inventory, suppliers, and processes orders.
+     * It also launches the user interface for interaction.
      */
     public static void main(String[] args) {
+
+        // --- SERVICE SETUP ---
         InventoryService inventoryService = new InventoryService();
         SupplierService supplierService = new SupplierService(inventoryService);
         OrderCreationService orderCreationService = new OrderCreationService(inventoryService, supplierService);
@@ -31,9 +29,6 @@ public class Main
         inventoryService.addInventoryItem(1, "Laptop", "15-inch portable computer", 1000.0, 10);
         inventoryService.addInventoryItem(2, "Mouse", "Wireless optical mouse", 25.0, 50);
         inventoryService.addInventoryItem(3, "Keyboard", "Mechanical keyboard", 70.0, 30);
-
-        // System.out.println("=== INVENTORY AFTER ADDITION ===");
-        // inventoryService.printInventory();
 
         // --- SUPPLIER SETUP ---
         supplierService.addSupplier("Acme Supplies", "acme@supplies.com", "02081234567", "London");

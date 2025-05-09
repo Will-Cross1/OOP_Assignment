@@ -7,14 +7,27 @@ import java.util.Map;
 
 import models.*;
 
+/**
+ * FinancialService provides operations for retrieving financial transactions
+ * and generating financial reports based on order data.
+ */
 public class FinancialService {
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    // Constructor
+    /**
+     * Constructs a FinancialService with the given OrderService dependency.
+     *
+     * @param orderService The order service to pull order and transaction data from.
+     */
     public FinancialService(OrderService orderService) {
         this.orderService = orderService;
     }
 
+    /**
+     * Retrieves all financial transactions from all orders.
+     *
+     * @return A list of all financial transactions.
+     */
     public List<FinancialTransaction> getAllTransactions() {
         List<Order> orders = orderService.getAllOrders();
         List<FinancialTransaction> transactions = new ArrayList<>();
@@ -26,6 +39,11 @@ public class FinancialService {
         return transactions;
     }
 
+    /**
+     * Retrieves all purchase-type transactions.
+     *
+     * @return A list of financial transactions where the type is PURCHASE.
+     */
     public List<FinancialTransaction> getPurchaseTransactions() {
         List<FinancialTransaction> allTransactions = getAllTransactions();
         List<FinancialTransaction> purchaseTransactions = new ArrayList<>();
@@ -39,6 +57,11 @@ public class FinancialService {
         return purchaseTransactions;
     }
 
+    /**
+     * Retrieves all sale-type transactions.
+     *
+     * @return A list of financial transactions where the type is SALE.
+     */
     public List<FinancialTransaction> getSaleTransactions() {
         List<FinancialTransaction> allTransactions = getAllTransactions();
         List<FinancialTransaction> saleTransactions = new ArrayList<>();
@@ -52,15 +75,20 @@ public class FinancialService {
         return saleTransactions;
     }
 
-    // All-Time Financial Reporting
+    /**
+     * Generates a financial report based on all historical orders.
+     *
+     * @return A map containing total revenue, total purchases, net income, and profit/loss status.
+     */
     public Map<String, Object> generateAllTimeFinancialReport() {
         double totalRevenue = 0;
         double totalPurchases = 0;
 
         for (Order order : orderService.getAllOrders()) {
-            double total = order.getTransaction().getTotal();
+            FinancialTransaction transaction = order.getTransaction();
+            double total = transaction.getTotal();
 
-            if (order.getTransaction().getType() == FinancialTransaction.Type.SALE) {
+            if (transaction.getType() == FinancialTransaction.Type.SALE) {
                 totalRevenue += total;
             } else {
                 totalPurchases += total;

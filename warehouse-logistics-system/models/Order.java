@@ -2,6 +2,16 @@ package models;
 
 import java.util.Map;
 
+/**
+ * Represents an order in the system, including the products in the order, 
+ * its current status, and the associated financial transaction.
+ * 
+ * The order is associated with a set of products (mapped by item ID or supplier:item ID),
+ * and each order has a status that indicates its processing stage (e.g., PROCESSED, IN_TRANSIT, DELIVERED).
+ * The financial transaction related to the order is also stored, providing details of the payment or billing.
+ * 
+ * This class provides methods for managing the order's state and accessing its details.
+ */
 public class Order {
     public enum Status {
         PROCESSED, IN_TRANSIT, DELIVERED

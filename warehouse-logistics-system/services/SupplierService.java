@@ -8,6 +8,13 @@ import models.SupplierOrderRecord;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service class responsible for managing suppliers and their associated items.
+ *
+ * Provides functionality to add, update, and delete suppliers, manage supplier items,
+ * and create records for supplier orders. This service also coordinates with
+ * InventoryService to link inventory items with supplier data.
+ */
 public class SupplierService {
     private final InventoryService inventoryService;
     private List<Supplier> suppliers;
@@ -133,7 +140,11 @@ public class SupplierService {
     public boolean removeSupplierItem(int supplierId, int itemId) {
         Supplier supplier = findSupplierById(supplierId);
         if (supplier != null) {
-            supplier.removeItemById(itemId);
+            SupplierItem item = supplier.getItemById(itemId);
+            if (item != null) {
+                supplier.removeItemById(itemId);
+                return true;
+            }
         }
         return false;
     }

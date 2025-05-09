@@ -5,24 +5,28 @@ import java.util.Scanner;
 
 import models.InventoryItem;
 import services.*;
+
 /**
- * Write a description of class VisualInterface here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * VisualInterface class provides a simple text-based user interface
+ * for interacting with the warehouse management system. 
+ * It allows navigation through suppliers, inventory, orders, and financial reports.
  */
-public class VisualInterface
-{
+public class VisualInterface {
     private Scanner scanner;
     private SupplierService supplierService;
     private InventoryService inventoryService;
     private OrderService orderService;
     private FinancialService financialService;
+
     /**
-     * Constructor for objects of class VisualInterface
+     * Constructor to initialise the VisualInterface with required services.
+     * 
+     * @param supplierService handles supplier-related operations
+     * @param inventoryService manages inventory items
+     * @param orderService processes orders
+     * @param financialService generates financial reports
      */
-    public VisualInterface(SupplierService supplierService, InventoryService inventoryService, OrderService orderService, FinancialService financialService)
-    {
+    public VisualInterface(SupplierService supplierService, InventoryService inventoryService, OrderService orderService, FinancialService financialService) {
         this.scanner = new Scanner(System.in);
         this.supplierService = supplierService;
         this.inventoryService = inventoryService;
@@ -31,16 +35,14 @@ public class VisualInterface
     }
 
     /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
+     * Launches the main UI loop, displaying the menu and routing to the appropriate submenus.
+     * Continues running until the user chooses to exit.
      */
     public void run() {
         boolean running = true;
 
         while (running) {
-            // Check and display low stock items before menu
+            // Display warning if there are any low stock items
             Map<InventoryItem, Integer> lowStockItems = inventoryService.getLowStockItems();
             if (!lowStockItems.isEmpty()) {
                 System.out.println("\n*** WARNING: Low Stock Items ***");
@@ -51,6 +53,7 @@ public class VisualInterface
                 System.out.println("*********************************");
             }
             
+            // Display main menu options
             System.out.println("\n=== BNU Warehouse Management System ===");
             System.out.println("1. Supplier Management");
             System.out.println("2. Inventory Management");
@@ -61,11 +64,12 @@ public class VisualInterface
             
             int choice = ImportUtils.getUserChoice(scanner);
 
+            // Route to appropriate submenu or action based on user input
             switch (choice) {
-                case 1 -> new SupplierMenu(scanner, supplierService, orderService, inventoryService).run();
-                case 2 -> new InventoryMenu(scanner, inventoryService).run();
-                case 3 -> new CustomerOrderMenu(scanner, inventoryService, orderService).run();
-                case 4 -> new FinanceMenu(scanner, orderService, financialService).run();
+                case 1 -> new SupplierMenu(scanner, supplierService, orderService, inventoryService).run(); // Manage suppliers
+                case 2 -> new InventoryMenu(scanner, inventoryService).run(); // Manage inventory
+                case 3 -> new CustomerOrderMenu(scanner, inventoryService, orderService).run(); // Create customer orders
+                case 4 -> new FinanceMenu(scanner, orderService, financialService).run(); // View financial reports
                 case 0 -> {
                     System.out.println("Exiting...");
                     running = false;
@@ -74,6 +78,7 @@ public class VisualInterface
             }
         }
 
+        // Cleanup
         scanner.close();
         System.exit(0);
     }
