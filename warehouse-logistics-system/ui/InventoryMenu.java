@@ -89,20 +89,35 @@ public class InventoryMenu {
      */
     private void changePrices() {
         System.out.println("Change Prices");
+
         for (InventoryItem item : inventoryService.getAllInventoryItems()) {
             System.out.println(item);
         }
 
         System.out.print("Enter Item ID: ");
         int id = ImportUtils.getUserChoice(scanner);
-        System.out.print(inventoryService.findById(id) + "\n\n");
+
+        // Validate ID
+        InventoryItem selectedItem = inventoryService.findById(id);
+        if (id == -1 || selectedItem == null) {
+            System.out.println("Invalid ID entered.");
+            return;
+        }
+
+        System.out.println(selectedItem + "\n");
 
         System.out.print("Enter New Price: ");
         double price = ImportUtils.getUserChoiceDouble(scanner);
 
+        // Validate Price
+        if (price < 0) {
+            System.out.println("Invalid price entered.");
+            return;
+        }
+
         inventoryService.updateItemPrice(id, price);
-        System.out.print("Updated");
-        System.out.print(inventoryService.findById(id) + "\n\n");
+        System.out.println("Updated:");
+        System.out.println(inventoryService.findById(id) + "\n");
     }
 
     /**
@@ -119,6 +134,11 @@ public class InventoryMenu {
 
         System.out.print("Enter new unit price: ");
         double unitPrice = ImportUtils.getUserChoiceDouble(scanner);
+
+        if (unitPrice < 0) {
+            System.out.println("Invalid unit price entered.");
+            return;
+        }
 
         int nextId = inventoryService.getNextAvailableId();
         inventoryService.addInventoryItem(nextId, name, description, unitPrice, 0);

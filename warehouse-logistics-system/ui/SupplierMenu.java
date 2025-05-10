@@ -104,15 +104,31 @@ public class SupplierMenu {
 
         System.out.print("Enter Supplier Name: ");
         String name = ImportUtils.getUserChoiceStr(scanner);
+        if (name == null || name.trim().isEmpty()) {
+            System.out.println("Supplier name cannot be empty.");
+            return;
+        }
 
         System.out.print("Enter Email: ");
         String email = ImportUtils.getUserChoiceStr(scanner);
+        if (email == null || email.trim().isEmpty() || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            System.out.println("Invalid email format.");
+            return;
+        }
 
         System.out.print("Enter Phone: ");
         String phone = ImportUtils.getUserChoiceStr(scanner);
+        if (phone == null || phone.trim().isEmpty()) {
+            System.out.println("Phone number cannot be empty.");
+            return;
+        }
 
         System.out.print("Enter Location: ");
         String location = ImportUtils.getUserChoiceStr(scanner);
+        if (location == null || location.trim().isEmpty()) {
+            System.out.println("Location cannot be empty.");
+            return;
+        }
 
         Supplier newSupplier = supplierService.addSupplier(name, email, phone, location);
         int supplierId = newSupplier.getId();
@@ -137,6 +153,10 @@ public class SupplierMenu {
 
             System.out.print("Enter supplier price for '" + item.getName() + "': ");
             double supplierPrice = ImportUtils.getUserChoiceDouble(scanner);
+            if (supplierPrice < 0) {
+                System.out.println("Invalid supplier price. Please try again.");
+                continue;
+            }
 
             supplierService.createSupplierItem(supplierId, inventoryItemId, supplierPrice);
             System.out.println("Added item '" + item.getName() + "' to supplier.");
@@ -144,6 +164,7 @@ public class SupplierMenu {
 
         System.out.println("Supplier added successfully with ID: " + supplierId);
     }
+
 
     /**
      * Updates supplier information including contact, location, or supplied items.
@@ -181,6 +202,10 @@ public class SupplierMenu {
                 case 2 -> {
                     System.out.print("Enter new Email: ");
                     String newEmail = ImportUtils.getUserChoiceStr(scanner);
+                    if (newEmail == null || newEmail.trim().isEmpty() || !newEmail.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+                        System.out.println("Invalid email format.");
+                        return;
+                    }
                     System.out.print("Enter new Phone: ");
                     String newPhone = ImportUtils.getUserChoiceStr(scanner);
                     System.out.println(supplierService.updateSupplierContact(id, newEmail, newPhone)
@@ -241,6 +266,10 @@ public class SupplierMenu {
                     String newName = ImportUtils.getUserChoiceStr(scanner);
                     System.out.print("Enter new Email: ");
                     String newEmail = ImportUtils.getUserChoiceStr(scanner);
+                    if (newEmail == null || newEmail.trim().isEmpty() || !newEmail.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+                        System.out.println("Invalid email format.");
+                        return;
+                    }
                     System.out.print("Enter new Phone: ");
                     String newPhone = ImportUtils.getUserChoiceStr(scanner);
                     System.out.print("Enter new Location: ");
@@ -382,6 +411,7 @@ public class SupplierMenu {
                 // Get the quantity of the item to be added
                 System.out.print("Enter quantity: ");
                 int quantity = ImportUtils.getUserChoice(scanner);
+                if (quantity == -1) break;
 
                 // Update the saleProducts map with the added quantity
                 String key = supplierId + ":" + itemId;

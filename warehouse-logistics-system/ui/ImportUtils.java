@@ -45,7 +45,12 @@ public class ImportUtils {
      * @return The double input provided by the user.
      */
     public static double getUserChoiceDouble(Scanner scanner) {
-        // Parse and return the input as a double
-        return Double.parseDouble(scanner.nextLine());
+        try {
+            // Parse and return the input as a double
+            return Double.parseDouble(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            // Return -1 in case of invalid input
+            return -1; // Invalid input
+        }
     }
 }

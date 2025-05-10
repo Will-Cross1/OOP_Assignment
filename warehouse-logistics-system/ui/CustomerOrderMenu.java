@@ -97,13 +97,26 @@ public class CustomerOrderMenu {
      * @return the updated map of sale products
      */
     private Map<String, Integer> addItems(Map<String, Integer> saleProducts) {
-        System.out.print("Select item ID: ");
-        int id = ImportUtils.getUserChoice(scanner);
+        boolean valid = false;
 
-        System.out.print("Select a quantity: ");
-        int quantity = ImportUtils.getUserChoice(scanner);
+        while (!valid) {
+            System.out.print("Select item ID: ");
+            int id = ImportUtils.getUserChoice(scanner);
+            if (id == -1) {
+                System.out.println("Invalid ID. Try again.");
+                continue;
+            }
 
-        saleProducts.put(String.valueOf(id), quantity);
+            System.out.print("Select a quantity: ");
+            int quantity = ImportUtils.getUserChoice(scanner);
+            if (quantity == -1) {
+                System.out.println("Invalid quantity. Try again.");
+                continue;
+            }
+
+            saleProducts.put(String.valueOf(id), quantity);
+            valid = true;
+        }
         return saleProducts;
     }
 }
