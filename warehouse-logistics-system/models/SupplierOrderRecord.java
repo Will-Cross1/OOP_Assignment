@@ -1,54 +1,49 @@
 package models;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a record of an order placed with a supplier.
- *
- * Each record contains the order ID, date of the order, total cost,
- * and a map of item IDs to quantities ordered.
- * This class is primarily used for tracking a supplier's order history.
- * 
- * This class is used instead of the Order class for supplier orders,
- * as it is more focused on the supplier's perspective.
- * It contains only the necessary information for the supplier,
- * such as the order ID, date, total cost, and items ordered.
+ * Represents a historical record of a supplier order.
+ * Stores the ordered items and their quantities, but no status or financial transaction.
  */
-public class SupplierOrderRecord {
-    private int orderId;
-    private LocalDate date;
-    private double total;
-    private Map<Integer, Integer> items; // SupplierItemId -> Quantity
+public class SupplierOrderRecord extends AbstractOrder {
 
-    // Constructor
+    private final Map<Integer, Integer> items; // Maps SupplierItemId to quantity ordered
+
+    /**
+     * Constructs a new SupplierOrderRecord.
+     *
+     * @param orderId the unique ID of the order
+     * @param date    the date the order was placed
+     * @param total   the total cost of the order
+     * @param items   a map of supplier item IDs to their ordered quantities
+     */
     public SupplierOrderRecord(int orderId, LocalDate date, double total, Map<Integer, Integer> items) {
-        this.orderId = orderId;
-        this.date = date;
-        this.total = total;
-        this.items = items;
+        super(orderId, date, total);
+        this.items = Collections.unmodifiableMap(new HashMap<>(items));
     }
 
-    // Getters
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
+    /**
+     * Returns the items in the order.
+     *
+     * @return an unmodifiable map of supplier item IDs to quantities
+     */
+    @Override
     public Map<Integer, Integer> getItems() {
         return items;
     }
 
-    // ToString method to display item details
+    /**
+     * Returns a string representation of the supplier order record,
+     * including the base order details and the item map.
+     *
+     * @return a string summary of the order record
+     */
     @Override
     public String toString() {
-        return "Order #" + orderId + " on " + date + " (item ID=Quantity): " + items + " total " + total;
+        return super.toString() + " | Items (ID=Qty): " + items;
     }
 }

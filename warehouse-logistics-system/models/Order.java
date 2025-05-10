@@ -1,62 +1,95 @@
 package models;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents an order in the system, including the products in the order, 
- * its current status, and the associated financial transaction.
- * 
- * The order is associated with a set of products (mapped by item ID or supplier:item ID),
- * and each order has a status that indicates its processing stage (e.g., PROCESSED, IN_TRANSIT, DELIVERED).
- * The financial transaction related to the order is also stored, providing details of the payment or billing.
- * 
- * This class provides methods for managing the order's state and accessing its details.
+ * Represents an order in the system. 
+ * Can be a sale or purchase order, and tracks the items involved, 
+ * the status of the order, and the associated financial transaction.
  */
-public class Order {
+public class Order extends AbstractOrder {
+
+    /**
+     * Enum representing the possible statuses of an order.
+     */
     public enum Status {
         PROCESSED, IN_TRANSIT, DELIVERED
     }
 
-    private int id;
-    private Map<String, Integer> products; // key = item id or supplier:supplierItem
+    private final Map<String, Integer> products; // itemId for sale or supplierId:itemId for purchase
     private Status status;
-    private FinancialTransaction transaction;
+    private final FinancialTransaction transaction;
 
-    // Constructor
-    public Order(int id, Map<String, Integer> products,
-                 Status status, FinancialTransaction transaction) {
-        this.id = id;
-        this.products = products;
+    /**
+     * Constructs a new Order instance.
+     *
+     * @param id           the order ID
+     * @param date         the date of the order
+     * @param total        the total cost of the order
+     * @param products     a map of product identifiers to quantities
+     * @param status       the initial status of the order
+     * @param transaction  the financial transaction associated with this order
+     */
+    public Order(int id, LocalDate date, double total,
+                 Map<String, Integer> products,
+                 Status status,
+                 FinancialTransaction transaction) {
+        super(id, date, total);
+        this.products = Collections.unmodifiableMap(new HashMap<>(products));
         this.status = status;
         this.transaction = transaction;
     }
 
-    // Getters
-    public int getId() {
-        return id;
-    }
-
-    public Map<String, Integer> getProducts() {
+    /**
+     * Returns the ordered items. Keys are product identifiers, values are quantities.
+     *
+     * @return an unmodifiable map of product identifiers to quantities
+     */
+    @Override
+    public Map<String, Integer> getItems() {
         return products;
     }
 
+    /**
+     * Gets the current status of the order.
+     *
+     * @return the order's status
+     */
     public Status getStatus() {
         return status;
     }
 
-    public FinancialTransaction getTransaction() {
-        return transaction;
-    }
-
-    // Setters
+    /**
+     * Sets a new status for the order.
+     *
+     * @param status the new status to assign
+     */
     public void setStatus(Status status) {
         this.status = status;
     }
 
-    // ToString method to display item details
+    /**
+     * Returns the financial transaction associated with this order.
+     *
+     * @return the transaction object
+     */
+    public FinancialTransaction getTransaction() {
+        return transaction;
+    }
+
+    /**
+     * Returns a string representation of the order, including status and transaction details.
+     *
+     * @return a string summary of the order
+     */
     @Override
     public String toString() {
-        return "Order #" + id + " | Type: " + transaction.getType() +
-               " | Status: " + status + "\n" + transaction;
+        return super.toString() +
+               " | Status: " + status +
+               " | Type: " + transaction.getType() +
+               "\n" + transaction;
     }
 }

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import models.FinancialTransaction;
 import models.InventoryItem;
 import services.InventoryService;
 import services.OrderService;
@@ -79,7 +78,7 @@ public class CustomerOrderMenu {
             try {
                 int orderId = orderService.createOrder(
                     saleProducts,
-                    FinancialTransaction.Type.SALE
+                    false
                 );
                 System.out.println("Order sent!");
                 System.out.print(orderService.getOrderById(orderId) + "\n\n");
@@ -98,7 +97,7 @@ public class CustomerOrderMenu {
      * @return the updated map of sale products
      */
     private Map<String, Integer> addItems(Map<String, Integer> saleProducts) {
-        System.out.print("Select an ID: ");
+        System.out.print("Select item ID: ");
         int id = ImportUtils.getUserChoice(scanner);
 
         System.out.print("Select a quantity: ");

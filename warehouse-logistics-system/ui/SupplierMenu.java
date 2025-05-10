@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import models.FinancialTransaction;
 import models.InventoryItem;
 import models.Order;
 import models.Supplier;
@@ -318,7 +317,7 @@ public class SupplierMenu {
             try {
                 int orderId = orderService.createOrder(
                     saleProducts,
-                    FinancialTransaction.Type.PURCHASE
+                    true
                 );
                 System.out.println("Order placed successfully with ID: " + orderId);
             } catch (Exception e) {

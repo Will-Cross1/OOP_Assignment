@@ -2,6 +2,7 @@ package services;
 
 import models.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +33,14 @@ public class OrderService {
      * Creates an order and schedules delivery if it's a purchase.
      *
      * @param products A map of product names to quantities.
-     * @param type     The type of financial transaction (PURCHASE or SALE).
+     * @param isPurchase Whether the order is a purchase (true) or a sale (false).
      * @return The ID of the newly created order.
      */
-    public int createOrder(Map<String, Integer> products, FinancialTransaction.Type type) {
-        Order order = generateOrder(products, type);
+    public int createOrder(Map<String, Integer> products, boolean isPurchase) {
+        Order order = generateOrder(products, isPurchase);
         orders.add(order);
 
-        if (type == FinancialTransaction.Type.PURCHASE) {
+        if (isPurchase) {
             schedulePurchaseDelivery(order);
         }
 
@@ -47,18 +48,22 @@ public class OrderService {
     }
 
     /**
-     * Internal helper method to create an order based on its type.
+     * Internal helper method to create an order.
      *
      * @param products The product details.
-     * @param type     The transaction type.
+     * @param isPurchase Whether this is a purchase order.
      * @return The generated Order.
      */
-    private Order generateOrder(Map<String, Integer> products, FinancialTransaction.Type type) {
-        Order.Status status = (type == FinancialTransaction.Type.SALE)
-                ? Order.Status.DELIVERED
-                : Order.Status.PROCESSED;
+    private Order generateOrder(Map<String, Integer> products, boolean isPurchase) {
+        Order.Status status = isPurchase
+            ? Order.Status.PROCESSED
+            : Order.Status.DELIVERED;
 
-        return orderCreationService.createOrder(products, status, type);
+        FinancialTransaction transaction = isPurchase
+            ? new PurchaseTransaction(LocalDate.now())
+            : new SaleTransaction(LocalDate.now());
+
+        return orderCreationService.createOrder(products, status, transaction);
     }
 
     /**

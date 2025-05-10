@@ -56,7 +56,7 @@ public class Main
 
         orderService.createOrder(
             saleProducts,
-            FinancialTransaction.Type.SALE
+            false
         );
 
         // --- PURCHASE ORDER ---
@@ -66,7 +66,7 @@ public class Main
 
         orderService.createOrder(
             purchaseProducts,
-            FinancialTransaction.Type.PURCHASE
+            true
         );
 
         Map<String, Integer> purchaseProducts2 = new HashMap<>();
@@ -75,7 +75,7 @@ public class Main
 
         orderService.createOrder(
             purchaseProducts2,
-            FinancialTransaction.Type.PURCHASE
+            true
         );
 
         // inventoryService.printInventory();

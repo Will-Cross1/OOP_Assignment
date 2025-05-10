@@ -1,9 +1,9 @@
 package services;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import models.*;
 
@@ -29,50 +29,35 @@ public class FinancialService {
      * @return A list of all financial transactions.
      */
     public List<FinancialTransaction> getAllTransactions() {
-        List<Order> orders = orderService.getAllOrders();
-        List<FinancialTransaction> transactions = new ArrayList<>();
-
-        for (Order order : orders) {
-            transactions.add(order.getTransaction());
-        }
-
-        return transactions;
+        return orderService.getAllOrders().stream()
+            .map(Order::getTransaction)
+            .collect(Collectors.toList());
     }
 
     /**
-     * Retrieves all purchase-type transactions.
+     * Retrieves all purchase transactions.
      *
-     * @return A list of financial transactions where the type is PURCHASE.
+     * @return A list of all purchase transactions.
      */
-    public List<FinancialTransaction> getPurchaseTransactions() {
-        List<FinancialTransaction> allTransactions = getAllTransactions();
-        List<FinancialTransaction> purchaseTransactions = new ArrayList<>();
-
-        for (FinancialTransaction transaction : allTransactions) {
-            if (transaction.getType() == FinancialTransaction.Type.PURCHASE) {
-                purchaseTransactions.add(transaction);
-            }
-        }
-
-        return purchaseTransactions;
+    public List<PurchaseTransaction> getPurchaseTransactions() {
+        return orderService.getAllOrders().stream()
+            .map(Order::getTransaction)
+            .filter(PurchaseTransaction.class::isInstance) // Filtering purchase transactions
+            .map(PurchaseTransaction.class::cast)  // Casting to PurchaseTransaction
+            .collect(Collectors.toList());
     }
 
     /**
-     * Retrieves all sale-type transactions.
+     * Retrieves all sale transactions.
      *
-     * @return A list of financial transactions where the type is SALE.
+     * @return A list of all sale transactions.
      */
-    public List<FinancialTransaction> getSaleTransactions() {
-        List<FinancialTransaction> allTransactions = getAllTransactions();
-        List<FinancialTransaction> saleTransactions = new ArrayList<>();
-
-        for (FinancialTransaction transaction : allTransactions) {
-            if (transaction.getType() == FinancialTransaction.Type.SALE) {
-                saleTransactions.add(transaction);
-            }
-        }
-
-        return saleTransactions;
+    public List<SaleTransaction> getSaleTransactions() {
+        return orderService.getAllOrders().stream()
+            .map(Order::getTransaction)
+            .filter(SaleTransaction.class::isInstance) // Filtering sale transactions
+            .map(SaleTransaction.class::cast)  // Casting to SaleTransaction
+            .collect(Collectors.toList());
     }
 
     /**
@@ -88,9 +73,9 @@ public class FinancialService {
             FinancialTransaction transaction = order.getTransaction();
             double total = transaction.getTotal();
 
-            if (transaction.getType() == FinancialTransaction.Type.SALE) {
+            if (transaction instanceof SaleTransaction) {
                 totalRevenue += total;
-            } else {
+            } else if (transaction instanceof PurchaseTransaction) {
                 totalPurchases += total;
             }
         }
