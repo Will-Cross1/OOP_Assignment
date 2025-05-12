@@ -108,6 +108,6 @@ public class Supplier {
     // ToString method to display item details
     @Override
     public String toString() {
-        return "[" + id + "] " + name + " - " + email + " | " + phone + " | " + location + items;
+        return "[" + id + "] " + name + " - " + email + " | " + phone + " | " + location + " | Items: " + items;
     }
 }
