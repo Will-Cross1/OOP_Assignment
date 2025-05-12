@@ -70,7 +70,7 @@ public class SupplierServiceTest {
         assertEquals(1, supplierItem.getId(), "Item ID should match.");
         assertEquals("Item A", supplierItem.getName(), "Item name should match.");
         assertEquals("Description of Item A", supplierItem.getDescription(), "Item description should match.");
-        assertEquals(12.5, supplierItem.getSupplierPrice(), "Supplier price should be 12.5.");
+        assertEquals(12.5, supplierItem.getPrice(), "Supplier price should be 12.5.");
         assertTrue(supplier.getItems().contains(supplierItem), "Supplier should contain the item.");
     }
 
@@ -82,7 +82,7 @@ public class SupplierServiceTest {
         boolean updated = supplierService.updateSupplierPrice(supplier.getId(), supplierItem.getId(), 15.0);
 
         assertTrue(updated, "Supplier item price should be updated.");
-        assertEquals(15.0, supplierItem.getSupplierPrice(), "Updated price should be 15.0.");
+        assertEquals(15.0, supplierItem.getPrice(), "Updated price should be 15.0.");
     }
 
     @Test

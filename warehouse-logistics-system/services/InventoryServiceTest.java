@@ -42,7 +42,7 @@ public class InventoryServiceTest {
     @Test
     public void testUpdateItemPrice() {
         assertTrue(inventory.updateItemPrice(1, 4.99));
-        assertEquals(4.99, inventory.findById(1).getUnitPrice());
+        assertEquals(4.99, inventory.findById(1).getPrice());
     }
     
     @Test

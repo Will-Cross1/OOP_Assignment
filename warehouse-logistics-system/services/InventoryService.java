@@ -58,7 +58,7 @@ public class InventoryService {
     public boolean updateItemPrice(int id, double newPrice) {
         InventoryItem item = findById(id);
         if (item != null) {
-            item.setUnitPrice(newPrice);
+            item.setPrice(newPrice);
             return true;
         }
         return false;

@@ -130,7 +130,7 @@ public class SupplierService {
         if (supplier != null) {
             SupplierItem item = supplier.getItemById(itemId);
             if (item != null) {
-                item.setSupplierPrice(newPrice);
+                item.setPrice(newPrice);
                 return true;
             }
         }

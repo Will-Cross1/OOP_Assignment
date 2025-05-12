@@ -15,12 +15,14 @@ public abstract class Item {
     private int id;
     private String name;
     private String description;
+    private double price;
 
     // Constructor for setting the name, description, and ID
-    public Item(int id, String name, String description) {
+    public Item(int id, String name, String description, double price) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.price = price;
     }
 
     // Getters
@@ -36,9 +38,18 @@ public abstract class Item {
         return description;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    // Setter
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     // ToString method to display item details
     @Override
     public String toString() {
-        return "[" + id + "] " + name + " - " + description;
+        return "[" + id + "] " + name + " - " + description + " | Price: £" + price;
     }
 }

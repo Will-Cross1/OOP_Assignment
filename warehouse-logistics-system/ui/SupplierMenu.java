@@ -310,10 +310,15 @@ public class SupplierMenu {
             System.out.println(supplier);
         }
 
+        // Prompt the user to enter a supplier ID or -1 to stop adding
+        System.out.print("Enter supplier ID to order from: ");
+        int supplierId = ImportUtils.getUserChoice(scanner);
+        if (supplierId == -1) return;
+
         boolean order = false;
 
         while (!order) {
-            System.out.println("\n1. Display Suppliers");
+            System.out.println("\n1. Display Supplier");
             System.out.println("2. Add To Order");
             System.out.println("3. Complete Order");
             System.out.println("0. Cancel Order");
@@ -325,11 +330,9 @@ public class SupplierMenu {
             switch (choice) {
                 case 1 -> {
                     System.out.println();
-                    for (Supplier supplier : supplierService.getAllSuppliers()) {
-                        System.out.println(supplier);
-                    }
+                    System.out.print(supplierService.findSupplierById(supplierId));
                 }
-                case 2 -> addItems(saleProducts);
+                case 2 -> addItems(saleProducts, supplierId);
                 case 3 -> order = true;
                 case 0 -> {
                     System.out.println("Order canceled");
@@ -361,63 +364,46 @@ public class SupplierMenu {
      * Adds items to a sale by selecting suppliers and items. 
      * The user can choose a supplier, view their available items, 
      * and then add the desired items with their quantities to the sale.
-     * This method continues until the user stops adding items or finishes with all suppliers.
+     * This method continues until the user stops adding items.
      * 
      * @param saleProducts A map containing the current products being added to the sale. 
      *                     The key is a concatenation of the supplier ID and item ID, and the value is the quantity.
      * @return The updated map of sale products with added quantities.
      */
-    private Map<String, Integer> addItems(Map<String, Integer> saleProducts) {
-        while (true) {
-            // Display all available suppliers
-            System.out.println("\nAvailable Suppliers:");
-            for (Supplier supplier : supplierService.getAllSuppliers()) {
-                System.out.println(supplier);
-            }
+    private Map<String, Integer> addItems(Map<String, Integer> saleProducts, int supplierId) {
+        // Find the supplier by ID
+        Supplier supplier = supplierService.findSupplierById(supplierId);
 
-            // Prompt the user to enter a supplier ID or -1 to stop adding
-            System.out.print("Enter supplier ID (or -1 to stop adding): ");
-            int supplierId = ImportUtils.getUserChoice(scanner);
-            if (supplierId == -1) break;
+        // Allow the user to add items from the selected supplier
+        boolean doneWithOrder = false;
+        while (!doneWithOrder) {
+            System.out.println("\nItems from " + supplier.getName() + ":");
+            System.out.print(supplier);
 
-            // Find the supplier by ID
-            Supplier supplier = supplierService.findSupplierById(supplierId);
-            if (supplier == null) {
-                System.out.println("Invalid supplier ID.");
+            // Prompt the user to select an item or finish with the current supplier
+            System.out.print("\nEnter item ID to add (or -1 to finish with this supplier): ");
+            int itemId = ImportUtils.getUserChoice(scanner);
+            if (itemId == -1) {
+                doneWithOrder = true;
                 continue;
             }
 
-            // Allow the user to add items from the selected supplier
-            boolean doneWithSupplier = false;
-            while (!doneWithSupplier) {
-                System.out.println("\nItems from " + supplier.getName() + ":");
-                System.out.print(supplier);
-
-                // Prompt the user to select an item or finish with the current supplier
-                System.out.print("\nEnter item ID to add (or -1 to finish with this supplier): ");
-                int itemId = ImportUtils.getUserChoice(scanner);
-                if (itemId == -1) {
-                    doneWithSupplier = true;
-                    continue;
-                }
-
-                // Find the item by ID and handle invalid selections
-                SupplierItem selectedItem = supplier.getItemById(itemId);
-                if (selectedItem == null) {
-                    System.out.println("Invalid item ID.");
-                    continue;
-                }
-
-                // Get the quantity of the item to be added
-                System.out.print("Enter quantity: ");
-                int quantity = ImportUtils.getUserChoice(scanner);
-                if (quantity == -1) break;
-
-                // Update the saleProducts map with the added quantity
-                String key = supplierId + ":" + itemId;
-                saleProducts.put(key, saleProducts.getOrDefault(key, 0) + quantity);
-                System.out.println("Added " + quantity + " of " + selectedItem.getName() + ".");
+            // Find the item by ID and handle invalid selections
+            SupplierItem selectedItem = supplier.getItemById(itemId);
+            if (selectedItem == null) {
+                System.out.println("Invalid item ID.");
+                continue;
             }
+
+            // Get the quantity of the item to be added
+            System.out.print("Enter quantity: ");
+            int quantity = ImportUtils.getUserChoice(scanner);
+            if (quantity == -1) break;
+
+            // Update the saleProducts map with the added quantity
+            String key = supplierId + ":" + itemId;
+            saleProducts.put(key, saleProducts.getOrDefault(key, 0) + quantity);
+            System.out.println("Added " + quantity + " of " + selectedItem.getName() + ".");
         }
         return saleProducts;
     }

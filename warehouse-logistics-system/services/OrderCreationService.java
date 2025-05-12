@@ -61,7 +61,7 @@ public class OrderCreationService {
 
         applyStockChanges(order);
 
-        if (transaction instanceof PurchaseTransaction) {
+        if (transaction.getType() == FinancialTransaction.Type.PURCHASE) {
             updateSupplierOrderHistories(order);
         }
 
@@ -76,7 +76,7 @@ public class OrderCreationService {
      * @return True if the order is valid, otherwise false.
      */
     private boolean isOrderValid(Map<String, Integer> products, FinancialTransaction transaction) {
-        if (transaction instanceof SaleTransaction) {
+        if (transaction.getType() == FinancialTransaction.Type.SALE) {
             for (Map.Entry<String, Integer> entry : products.entrySet()) {
                 try {
                     int itemId = Integer.parseInt(entry.getKey());
@@ -88,7 +88,7 @@ public class OrderCreationService {
                     return false;
                 }
             }
-        } else if (transaction instanceof PurchaseTransaction) {
+        } else if (transaction.getType() == FinancialTransaction.Type.PURCHASE) {
             for (Map.Entry<String, Integer> entry : products.entrySet()) {
                 String[] parts = entry.getKey().split(":");
                 if (parts.length != 2) return false;
@@ -123,13 +123,13 @@ public class OrderCreationService {
             String key = entry.getKey();
             int quantity = entry.getValue();
 
-            if (transaction instanceof SaleTransaction) {
+            if (transaction.getType() == FinancialTransaction.Type.SALE) {
                 int itemId = Integer.parseInt(key);
                 InventoryItem item = inventoryService.findById(itemId);
                 if (item != null) {
-                    total += item.getUnitPrice() * quantity;
+                    total += item.getPrice() * quantity;
                 }
-            } else if (transaction instanceof PurchaseTransaction) {
+            } else if (transaction.getType() == FinancialTransaction.Type.PURCHASE) {
                 total += getPurchaseEntryTotal(key, quantity);
             }
         }
@@ -143,7 +143,7 @@ public class OrderCreationService {
      * @param order The order whose items affect inventory.
      */
     private void applyStockChanges(Order order) {
-        if (order.getTransaction() instanceof SaleTransaction) {
+        if (order.getTransaction().getType() == FinancialTransaction.Type.SALE) {
             for (Map.Entry<String, Integer> entry : order.getItems().entrySet()) {
                 int itemId = Integer.parseInt(entry.getKey());
                 InventoryItem item = inventoryService.findById(itemId);
@@ -186,7 +186,7 @@ public class OrderCreationService {
      */
     private double getPurchaseEntryTotal(String key, int quantity) {
         SupplierItem supplierItem = getSupplierItemFromKey(key);
-        return (supplierItem != null) ? supplierItem.getSupplierPrice() * quantity : 0.0;
+        return (supplierItem != null) ? supplierItem.getPrice() * quantity : 0.0;
     }
 
     /**
@@ -213,7 +213,7 @@ public class OrderCreationService {
      */
     public Runnable getStockUpdateTask(Order order) {
         return () -> {
-            if (order.getTransaction() instanceof PurchaseTransaction &&
+            if (order.getTransaction().getType() == FinancialTransaction.Type.PURCHASE &&
                 order.getStatus() == Order.Status.DELIVERED) {
                 for (Map.Entry<String, Integer> entry : order.getItems().entrySet()) {
                     updatePurchaseStock(entry.getKey(), entry.getValue());
@@ -251,7 +251,7 @@ public class OrderCreationService {
             for (Map.Entry<Integer, Integer> itemEntry : items.entrySet()) {
                 SupplierItem item = supplier.getItemById(itemEntry.getKey());
                 if (item != null) {
-                    total += itemEntry.getValue() * item.getSupplierPrice();
+                    total += itemEntry.getValue() * item.getPrice();
                 }
             }
 
