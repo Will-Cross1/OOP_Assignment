@@ -134,7 +134,7 @@ public class OrderService {
      * Manages the status transitions for purchase orders.
      *
      * PROCESSED → IN_TRANSIT after 10s  
-     * IN_TRANSIT → DELIVERED after 20s  
+     * IN_TRANSIT → DELIVERED after a further 10s  
      * Runs the given callback once delivery is complete.
      *
      * @param order        The order being delivered.

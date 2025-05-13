@@ -40,6 +40,7 @@ public class Main
         supplierService.createSupplierItem(3, 2, 23);
         supplierService.createSupplierItem(3, 3, 64);
 
+        // Example of creating a supplier order and purchase order
         // --- SALE ORDER ---
         Map<String, Integer> saleProducts = new HashMap<>();
         saleProducts.put("1", 2);
