@@ -303,7 +303,7 @@ public class SupplierMenu {
      * Creates a new purchase order with selected items and supplier.
      */
     private void createPurchaseOrder() {
-        System.out.println("\nCreate Purchase Order - [Placeholder]");
+        System.out.println("\nCreate Purchase Order ");
         Map<String, Integer> saleProducts = new HashMap<>();
 
         for (Supplier supplier : supplierService.getAllSuppliers()) {

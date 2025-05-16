@@ -151,7 +151,7 @@ public class FinanceMenu {
      * purchase costs, net income, and whether the result is profit or loss.
      */
     private void generateReport() {
-        System.out.println("Generating financial report... [Placeholder]");
+        System.out.println("Generating financial report... ");
 
         Map<String, Object> report = financialService.generateAllTimeFinancialReport();
 
