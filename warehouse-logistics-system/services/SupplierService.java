@@ -127,25 +127,23 @@ public class SupplierService {
 
     public boolean updateSupplierPrice(int supplierId, int itemId, double newPrice) {
         Supplier supplier = findSupplierById(supplierId);
-        if (supplier != null) {
-            SupplierItem item = supplier.getItemById(itemId);
-            if (item != null) {
-                item.setPrice(newPrice);
-                return true;
-            }
-        }
-        return false;
+        if (supplier == null) return false;
+
+        SupplierItem item = supplier.getItemById(itemId);
+        if (item == null) return false;
+
+        item.setPrice(newPrice);
+        return true;
     }
     
     public boolean removeSupplierItem(int supplierId, int itemId) {
         Supplier supplier = findSupplierById(supplierId);
-        if (supplier != null) {
-            SupplierItem item = supplier.getItemById(itemId);
-            if (item != null) {
-                supplier.removeItemById(itemId);
-                return true;
-            }
-        }
-        return false;
+        if (supplier == null) return false;
+
+        SupplierItem item = supplier.getItemById(itemId);
+        if (item == null) return false;
+
+        supplier.removeItemById(itemId);
+        return true;
     }
 }
